@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RHRI — Reproductive Health Research Institute</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-900: #0F1B33;
+  --navy-800: #162444;
+  --navy-700: #1E2D52;
+  --purple-700: #4A2D7A;
+  --purple-600: #6B3FA0;
+  --purple-500: #8B6BB5;
+  --purple-400: #9E85C4;
+  --purple-300: #B8A3D6;
+  --purple-200: #D4C7E8;
+  --purple-100: #EDE7F5;
+  --purple-50: #F7F3FC;
+  --white: #FFFFFF;
+  --off-white: #F8F7FB;
+  --gray-100: #F0EEF4;
+  --gray-200: #E0DDE8;
+  --gray-300: #C8C4D2;
+  --gray-400: #8E8A9A;
+  --gray-600: #5A5668;
+  --gray-800: #2E2A3A;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); color: var(--gray-800); background: var(--white); overflow-x: hidden; line-height: 1.7; font-weight: 300; }
+.page { display: none; min-height: 100vh; }
+.page.active { display: block; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(15,27,51,0.06); transition: all 0.4s ease; }
+nav.scrolled { background: rgba(255,255,255,0.97); box-shadow: 0 4px 24px rgba(15,27,51,0.06); }
+.nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.logo { display: flex; align-items: center; gap: 14px; cursor: pointer; text-decoration: none; }
+.logo-mark { width: 44px; height: 44px; flex-shrink: 0; }
+.logo-mark svg { width: 100%; height: 100%; }
+.logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+.logo-text .name { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--navy-800); letter-spacing: 0.5px; }
+.logo-text .full { font-size: 9px; color: var(--purple-500); letter-spacing: 1.8px; text-transform: uppercase; font-weight: 500; margin-top: 2px; }
+.nav-links { display: flex; gap: 4px; align-items: center; }
+.nav-links a { color: var(--gray-600); text-decoration: none; font-size: 13.5px; font-weight: 400; padding: 8px 16px; border-radius: 8px; transition: all 0.25s ease; cursor: pointer; }
+.nav-links a:hover { color: var(--navy-800); background: rgba(0,0,0,0.03); }
+.nav-links a.active { color: var(--purple-600); font-weight: 500; }
+.nav-links .cta-btn { background: var(--navy-800); color: #fff !important; padding: 9px 24px; border-radius: 8px; font-weight: 500; }
+.nav-links .cta-btn:hover { background: var(--navy-900); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(15,27,51,0.15); }
+.mobile-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+.mobile-toggle span { display: block; width: 22px; height: 2px; background: var(--navy-800); margin: 5px 0; }
+
+/* HERO */
+.hero { min-height: 100vh; background: var(--white); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 120px 40px 80px; }
+.hero::before { content: ''; position: absolute; top: -200px; right: -200px; width: 700px; height: 700px; background: radial-gradient(circle, var(--purple-50) 0%, transparent 70%); border-radius: 50%; }
+.hero::after { content: ''; position: absolute; bottom: -300px; left: -150px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(15,27,51,0.02) 0%, transparent 70%); border-radius: 50%; }
+.hero-content { max-width: 780px; text-align: center; position: relative; z-index: 2; }
+.hero-logo { width: 100px; height: 100px; margin: 0 auto 36px; animation: fadeInUp 0.7s ease both; }
+.hero-logo svg { width: 100%; height: 100%; }
+.hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--purple-50); border: 1px solid var(--purple-100); padding: 7px 20px; border-radius: 100px; font-size: 10.5px; color: var(--purple-600); letter-spacing: 2.5px; text-transform: uppercase; font-weight: 600; margin-bottom: 32px; animation: fadeInUp 0.7s ease 0.1s both; }
+.hero h1 { font-family: var(--font-display); font-size: clamp(2.8rem, 5.5vw, 4.4rem); font-weight: 500; color: var(--navy-800); line-height: 1.12; margin-bottom: 24px; animation: fadeInUp 0.7s ease 0.2s both; }
+.hero h1 em { font-style: italic; color: var(--purple-600); }
+.hero-sub { font-size: clamp(1rem, 1.6vw, 1.15rem); color: var(--gray-400); max-width: 560px; margin: 0 auto 40px; line-height: 1.85; font-weight: 300; animation: fadeInUp 0.7s ease 0.3s both; }
+.hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; animation: fadeInUp 0.7s ease 0.4s both; }
+
+/* BUTTONS */
+.btn-primary { background: var(--navy-800); color: #fff; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: 500; font-size: 14px; transition: all 0.25s ease; border: none; cursor: pointer; font-family: var(--font-body); }
+.btn-primary:hover { background: var(--navy-900); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(15,27,51,0.15); }
+.btn-outline { background: transparent; border: 1.5px solid var(--gray-200); color: var(--gray-600); padding: 13px 32px; border-radius: 10px; text-decoration: none; font-weight: 400; font-size: 14px; transition: all 0.25s ease; cursor: pointer; font-family: var(--font-body); }
+.btn-outline:hover { border-color: var(--purple-300); color: var(--purple-600); background: var(--purple-50); }
+.btn-purple { background: var(--purple-600); color: #fff; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: 500; font-size: 14px; transition: all 0.25s ease; border: none; cursor: pointer; font-family: var(--font-body); }
+.btn-purple:hover { background: var(--purple-700); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(107,63,160,0.2); }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ESSENCE */
+.essence-bar { padding: 40px; text-align: center; background: var(--off-white); border-top: 1px solid var(--gray-100); border-bottom: 1px solid var(--gray-100); }
+.essence-bar p { font-family: var(--font-display); font-size: 1.35rem; font-style: italic; color: var(--purple-600); font-weight: 500; }
+
+/* SECTIONS */
+.section { padding: 100px 40px; }
+.section-white { background: var(--white); }
+.section-off { background: var(--off-white); }
+.section-navy { background: var(--navy-800); color: #fff; }
+.container { max-width: 1100px; margin: 0 auto; }
+.section-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--purple-600); font-weight: 600; margin-bottom: 14px; }
+.section-navy .section-label { color: var(--purple-300); }
+.section-title { font-family: var(--font-display); font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 500; line-height: 1.2; margin-bottom: 18px; color: var(--navy-800); }
+.section-navy .section-title { color: #fff; }
+.section-subtitle { font-size: 1.05rem; color: var(--gray-400); max-width: 600px; line-height: 1.8; font-weight: 300; }
+.section-navy .section-subtitle { color: rgba(255,255,255,0.55); }
+
+/* PROBLEM */
+.problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; margin-top: 56px; align-items: start; }
+.problem-left h3 { font-family: var(--font-display); font-size: 1.55rem; font-weight: 600; color: var(--navy-800); margin-bottom: 18px; line-height: 1.3; }
+.problem-left p { color: var(--gray-400); line-height: 1.9; font-weight: 300; font-size: 0.95rem; }
+.problem-items { display: flex; flex-direction: column; gap: 16px; }
+.problem-item { background: var(--white); border: 1px solid var(--gray-100); border-radius: 14px; padding: 24px 28px; transition: all 0.3s ease; }
+.problem-item:hover { border-color: var(--purple-200); box-shadow: 0 8px 24px rgba(15,27,51,0.04); transform: translateX(4px); }
+.problem-item .num { font-size: 11px; color: var(--purple-500); font-weight: 600; letter-spacing: 1.5px; margin-bottom: 4px; }
+.problem-item h4 { color: var(--navy-800); font-weight: 500; font-size: 0.95rem; margin-bottom: 4px; }
+.problem-item p { color: var(--gray-400); font-size: 0.85rem; line-height: 1.7; font-weight: 300; }
+
+/* FRAMEWORK */
+.framework-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 56px; }
+.pillar-card { background: var(--white); border: 1px solid var(--gray-100); border-radius: 16px; padding: 32px 24px; transition: all 0.35s ease; position: relative; overflow: hidden; }
+.pillar-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--navy-700), var(--purple-600)); transform: scaleX(0); transform-origin: left; transition: transform 0.35s ease; }
+.pillar-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(15,27,51,0.07); border-color: var(--purple-100); }
+.pillar-card:hover::before { transform: scaleX(1); }
+.pillar-num { font-family: var(--font-display); font-size: 2.4rem; font-weight: 700; color: var(--purple-200); line-height: 1; margin-bottom: 14px; }
+.pillar-card h3 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; color: var(--navy-800); margin-bottom: 10px; }
+.pillar-card p { font-size: 0.86rem; color: var(--gray-400); line-height: 1.8; font-weight: 300; }
+
+/* AUDIENCE */
+.audience-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 56px; }
+.audience-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 36px 30px; transition: all 0.3s ease; }
+.audience-card:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.18); transform: translateY(-2px); }
+.audience-icon { width: 44px; height: 44px; background: rgba(107,63,160,0.2); border-radius: 11px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; font-size: 18px; }
+.audience-card h3 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; color: #fff; margin-bottom: 8px; }
+.audience-card p { font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.8; font-weight: 300; }
+
+/* STRATEGIC PILLARS */
+.strat-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
+.strat-card { background: var(--white); border: 1px solid var(--gray-100); border-radius: 16px; padding: 36px 28px; text-align: center; transition: all 0.35s ease; }
+.strat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(15,27,51,0.06); }
+.strat-icon { width: 56px; height: 56px; margin: 0 auto 20px; background: var(--purple-50); border: 1px solid var(--purple-100); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+.strat-card h3 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; color: var(--navy-800); margin-bottom: 10px; }
+.strat-card p { font-size: 0.86rem; color: var(--gray-400); line-height: 1.8; font-weight: 300; }
+
+/* TIMELINE */
+.timeline { margin-top: 56px; position: relative; padding-left: 40px; }
+.timeline::before { content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(to bottom, var(--purple-300), var(--gray-200)); }
+.timeline-item { position: relative; margin-bottom: 44px; }
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-item::before { content: ''; position: absolute; left: -40px; top: 8px; width: 16px; height: 16px; background: var(--off-white); border: 2.5px solid var(--purple-500); border-radius: 50%; }
+.timeline-year { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--purple-500); font-weight: 600; margin-bottom: 6px; }
+.timeline-item h3 { font-family: var(--font-display); font-size: 1.35rem; font-weight: 600; color: var(--navy-800); margin-bottom: 8px; }
+.timeline-item p { color: var(--gray-400); font-size: 0.9rem; line-height: 1.85; font-weight: 300; max-width: 540px; }
+
+/* CTA */
+.cta-section { text-align: center; background: var(--navy-800); padding: 88px 40px; position: relative; overflow: hidden; }
+.cta-section::before { content: ''; position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(107,63,160,0.1) 0%, transparent 60%); border-radius: 50%; }
+.cta-section .container { position: relative; z-index: 2; }
+.cta-section h2 { font-family: var(--font-display); font-size: clamp(2rem, 3.5vw, 2.8rem); color: #fff; font-weight: 500; margin-bottom: 16px; }
+.cta-section h2 em { font-style: italic; color: var(--purple-300); }
+.cta-section p { color: rgba(255,255,255,0.5); max-width: 480px; margin: 0 auto 32px; font-weight: 300; }
+
+/* FOOTER */
+footer { background: var(--white); border-top: 1px solid var(--gray-100); padding: 56px 40px 28px; }
+.footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+.footer-brand .footer-logo-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.footer-brand .footer-logo-wrap svg { width: 32px; height: 32px; flex-shrink: 0; }
+.footer-brand .footer-logo-wrap span { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--navy-800); }
+.footer-brand p { color: var(--gray-400); font-size: 0.84rem; line-height: 1.7; max-width: 260px; font-weight: 300; }
+.footer-col h4 { color: var(--navy-800); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin-bottom: 16px; }
+.footer-col a { display: block; color: var(--gray-400); text-decoration: none; font-size: 0.84rem; margin-bottom: 9px; transition: color 0.2s; font-weight: 300; cursor: pointer; }
+.footer-col a:hover { color: var(--purple-600); }
+.footer-bottom { max-width: 1100px; margin: 32px auto 0; padding-top: 20px; border-top: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center; }
+.footer-bottom p { color: var(--gray-300); font-size: 0.76rem; font-weight: 300; }
+
+/* ABOUT */
+.about-hero { min-height: 44vh; background: var(--white); display: flex; align-items: center; padding: 140px 40px 60px; position: relative; border-bottom: 1px solid var(--gray-100); }
+.about-hero::before { content: ''; position: absolute; top: -200px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, var(--purple-50) 0%, transparent 70%); border-radius: 50%; }
+.about-hero .container { position: relative; z-index: 2; }
+.about-hero h1 { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 3.6rem); color: var(--navy-800); font-weight: 500; margin-bottom: 16px; }
+.about-hero p { font-size: 1.05rem; color: var(--gray-400); max-width: 560px; font-weight: 300; line-height: 1.85; }
+.about-content { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; margin-top: 56px; align-items: start; }
+.about-block { margin-bottom: 40px; }
+.about-block h3 { font-family: var(--font-display); font-size: 1.35rem; font-weight: 600; color: var(--navy-800); margin-bottom: 12px; }
+.about-block p { color: var(--gray-400); font-size: 0.93rem; line-height: 1.9; font-weight: 300; }
+.placeholder { background: var(--off-white); border: 2px dashed var(--gray-200); border-radius: 12px; padding: 28px; color: var(--gray-400) !important; font-style: italic; font-size: 0.93rem; line-height: 1.9; font-weight: 300; }
+.values-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 20px; }
+.value-item { background: var(--white); border: 1px solid var(--gray-100); border-radius: 12px; padding: 22px 24px; transition: all 0.25s ease; }
+.value-item:hover { border-color: var(--purple-200); box-shadow: 0 4px 16px rgba(15,27,51,0.03); }
+.value-item h4 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; color: var(--navy-800); margin-bottom: 5px; }
+.value-item p { font-size: 0.82rem; color: var(--gray-400); line-height: 1.7; font-weight: 300; }
+.team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 36px; }
+.team-card { text-align: center; padding: 32px 20px; border: 1px solid var(--gray-100); border-radius: 16px; background: var(--white); transition: all 0.3s ease; }
+.team-card:hover { box-shadow: 0 8px 24px rgba(15,27,51,0.05); }
+.team-avatar { width: 80px; height: 80px; background: linear-gradient(135deg, var(--purple-50), var(--gray-100)); border-radius: 50%; margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; color: var(--purple-400); }
+.team-card h4 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--navy-800); margin-bottom: 3px; }
+.team-card .role { font-size: 0.8rem; color: var(--purple-500); font-weight: 400; margin-bottom: 8px; }
+.team-card p { font-size: 0.8rem; color: var(--gray-400); line-height: 1.7; font-weight: 300; font-style: italic; }
+
+/* CONTACT MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(15,27,51,0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.active { display: flex; animation: modalFade 0.25s ease; }
+@keyframes modalFade { from { opacity: 0; } to { opacity: 1; } }
+.modal { background: var(--white); border-radius: 20px; max-width: 540px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 80px rgba(15,27,51,0.2); position: relative; animation: modalSlide 0.35s cubic-bezier(0.16,1,0.3,1); }
+@keyframes modalSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.modal-header { padding: 36px 36px 0; }
+.modal-header h2 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 600; color: var(--navy-800); margin-bottom: 6px; }
+.modal-header p { font-size: 0.9rem; color: var(--gray-400); font-weight: 300; line-height: 1.6; }
+.modal-close { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border: none; background: var(--gray-100); border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--gray-600); transition: all 0.2s ease; line-height: 1; }
+.modal-close:hover { background: var(--gray-200); color: var(--navy-800); }
+.modal-body { padding: 28px 36px 36px; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-size: 0.82rem; font-weight: 500; color: var(--navy-800); margin-bottom: 6px; }
+.form-group .req { color: var(--purple-500); }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; border: 1.5px solid var(--gray-200); border-radius: 10px; font-family: var(--font-body); font-size: 0.9rem; font-weight: 300; color: var(--gray-800); background: var(--white); transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--purple-400); box-shadow: 0 0 0 3px rgba(107,63,160,0.08); }
+.form-group input::placeholder, .form-group textarea::placeholder { color: var(--gray-300); }
+.form-group textarea { resize: vertical; min-height: 100px; }
+.form-group select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238E8A9A' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; cursor: pointer; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-submit { width: 100%; padding: 14px; background: var(--navy-800); color: #fff; border: none; border-radius: 10px; font-family: var(--font-body); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.25s ease; margin-top: 4px; }
+.form-submit:hover { background: var(--navy-900); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(15,27,51,0.15); }
+.form-note { font-size: 0.75rem; color: var(--gray-400); text-align: center; margin-top: 14px; font-weight: 300; }
+.form-success { display: none; text-align: center; padding: 60px 36px; }
+.form-success.active { display: block; }
+.form-success .check-icon { width: 64px; height: 64px; background: var(--purple-50); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; }
+.form-success h3 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--navy-800); margin-bottom: 8px; }
+.form-success p { font-size: 0.9rem; color: var(--gray-400); font-weight: 300; max-width: 360px; margin: 0 auto; line-height: 1.7; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .mobile-toggle { display: block; }
+  nav.open .nav-links { display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0; background: var(--white); padding: 20px; border-bottom: 1px solid var(--gray-100); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+  .problem-grid, .about-content { grid-template-columns: 1fr; }
+  .framework-grid { grid-template-columns: repeat(2, 1fr); }
+  .strat-pillars, .audience-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+  .team-grid, .values-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .framework-grid, .footer-inner { grid-template-columns: 1fr; }
+  .section { padding: 64px 20px; }
+  .nav-inner { padding: 0 20px; }
+  .hero { padding: 120px 20px 60px; }
+  .about-hero { padding: 120px 20px 48px; }
+  .form-row { grid-template-columns: 1fr; }
+  .modal-header, .modal-body { padding-left: 24px; padding-right: 24px; }
+  .form-success { padding: 48px 24px; }
+}
+</style>
+</head>
+<body>
+<svg style="display:none"><defs>
+<symbol id="rhri-logo" viewBox="0 0 200 200">
+  <circle cx="100" cy="100" r="92" fill="none" stroke="#9E85C4" stroke-width="2.5"/>
+  <text x="100" y="88" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="700" font-size="48" fill="#162444" letter-spacing="3">RH</text>
+  <line x1="68" y1="98" x2="132" y2="98" stroke="#162444" stroke-width="2"/>
+  <text x="100" y="138" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="700" font-size="48" fill="#9E85C4" letter-spacing="3">RI</text>
+</symbol>
+</defs></svg>
+
+<!-- NAV -->
+<nav id="mainNav"><div class="nav-inner">
+  <a class="logo" onclick="showPage('home')">
+    <div class="logo-mark"><svg><use href="#rhri-logo"/></svg></div>
+    <div class="logo-text"><span class="name">RHRI</span><span class="full">Research Institute</span></div>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a onclick="showPage('home')" class="active" data-page="home">Home</a>
+    <a onclick="showPage('about')" data-page="about">About Us</a>
+    <a onclick="showPage('home'); setTimeout(()=>document.getElementById('framework').scrollIntoView({behavior:'smooth'}),100)">Framework</a>
+    <a onclick="showPage('home'); setTimeout(()=>document.getElementById('vision').scrollIntoView({behavior:'smooth'}),100)">Vision</a>
+    <a class="cta-btn" onclick="openContact()">Get Involved</a>
+  </div>
+  <button class="mobile-toggle" onclick="document.getElementById('mainNav').classList.toggle('open')"><span></span><span></span><span></span></button>
+</div></nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <section class="hero"><div class="hero-content">
+    <div class="hero-logo"><svg><use href="#rhri-logo"/></svg></div>
+    <div class="hero-badge">Reproductive Health Research Institute</div>
+    <h1>Enabling Innovation.<br><em>Validating Impact.</em></h1>
+    <p class="hero-sub">Bridging the gap between innovation and clinical implementation in reproductive health — identifying, validating, and accelerating the technologies that improve outcomes and access.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" onclick="showPage('about')">Learn About RHRI</a>
+      <a class="btn-outline" onclick="document.getElementById('framework').scrollIntoView({behavior:'smooth'})">Our Framework</a>
+    </div>
+  </div></section>
+
+  <div class="essence-bar"><p>"The right innovation, validated and delivered — to every patient who needs it."</p></div>
+
+  <section class="section section-off"><div class="container">
+    <div class="section-label">The Challenge</div>
+    <div class="section-title">The Innovation Valley of Death</div>
+    <div class="section-subtitle">Promising innovations fail to reach clinical practice — not because they lack merit, but because of systemic barriers in the translation process.</div>
+    <div class="problem-grid">
+      <div class="problem-left">
+        <h3>We are at an inflection point in reproductive health</h3>
+        <p>From basic biology to AI-driven embryo assessment, from microfluidics to genomics — research across multiple frontiers is generating unprecedented insights. Yet most innovations stall before reaching patients. The field needs infrastructure to separate signal from noise, and to move proven innovation into practice.</p>
+      </div>
+      <div class="problem-items">
+        <div class="problem-item"><div class="num">01</div><h4>Misaligned Expectations</h4><p>Innovators expect adoption; clinics expect finished, validated products. This mismatch creates friction and delays.</p></div>
+        <div class="problem-item"><div class="num">02</div><h4>Fragmented Validation</h4><p>No standard framework exists. Products reach market without operational validation or measurable impact proof.</p></div>
+        <div class="problem-item"><div class="num">03</div><h4>Risk Asymmetry</h4><p>Clinics bear all adoption risk. No reliable pre-validation mechanism protects early adopters.</p></div>
+        <div class="problem-item"><div class="num">04</div><h4>Market Inefficiency</h4><p>Valuable innovations die from adoption barriers while mediocre ones persist on marketing alone.</p></div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="section section-white" id="framework"><div class="container">
+    <div class="section-label">Our Approach</div>
+    <div class="section-title">The Four-Pillar Validation Framework</div>
+    <div class="section-subtitle">We assess innovations across four essential dimensions simultaneously — a comprehensive approach no other entity provides.</div>
+    <div class="framework-grid">
+      <div class="pillar-card"><div class="pillar-num">01</div><h3>Replicability</h3><p>Can it be reproduced reliably across different settings? We test for scientific consistency, protocol clarity, and quality control.</p></div>
+      <div class="pillar-card"><div class="pillar-num">02</div><h3>Scalability</h3><p>Can it work at the scale clinics need? We evaluate workflow integration, resource requirements, and training burden.</p></div>
+      <div class="pillar-card"><div class="pillar-num">03</div><h3>Sustainability</h3><p>Can clinics maintain this long-term? We assess economic viability, operational fit, and lasting value creation.</p></div>
+      <div class="pillar-card"><div class="pillar-num">04</div><h3>Value</h3><p>Does it improve outcomes, reduce costs, or increase access? The ultimate measure — technology for technology's sake helps no one.</p></div>
+    </div>
+  </div></section>
+
+  <section class="section section-navy"><div class="container">
+    <div class="section-label">Our Ecosystem</div>
+    <div class="section-title">Who We Serve</div>
+    <div class="section-subtitle">RHRI connects the entire reproductive health ecosystem around shared standards and validated innovation.</div>
+    <div class="audience-grid">
+      <div class="audience-card"><div class="audience-icon">&#9889;</div><h3>Innovators</h3><p>Your essential partner from prototype to market — providing rigorous, real-world validation that clinics trust, reducing costs, and accelerating adoption across multiple markets.</p></div>
+      <div class="audience-card"><div class="audience-icon">&#127973;</div><h3>Clinic Groups</h3><p>First access to rigorously validated innovations that work in real-world settings. We reduce your risk, improve outcomes, and position you as a leader in advanced care.</p></div>
+      <div class="audience-card"><div class="audience-icon">&#128202;</div><h3>Funding Bodies</h3><p>The infrastructure that ensures innovation investments deliver real-world value — expanding the market, accelerating translation, and maximizing every dollar invested.</p></div>
+      <div class="audience-card"><div class="audience-icon">&#10084;&#65039;</div><h3>Patients</h3><p>When you see RHRI validation, you know it works in the real world. We ensure innovations used in your care are rigorously proven to improve outcomes.</p></div>
+    </div>
+  </div></section>
+
+  <section class="section section-white"><div class="container">
+    <div class="section-label">Guiding Principles</div>
+    <div class="section-title">Our Strategic Pillars</div>
+    <div class="section-subtitle">Three core pillars guide every decision, communication, and initiative at RHRI.</div>
+    <div class="strat-pillars">
+      <div class="strat-card"><div class="strat-icon">&#127919;</div><h3>Patient-Centered Value</h3><p>Every innovation must demonstrably improve outcomes, reduce costs, or increase access. Patient value is the ultimate measure of success.</p></div>
+      <div class="strat-card"><div class="strat-icon">&#128300;</div><h3>Evidence-Based Excellence</h3><p>Scientific rigor meets real-world practicality. We maintain the highest standards while staying grounded in clinical reality.</p></div>
+      <div class="strat-card"><div class="strat-icon">&#129309;</div><h3>Collaborative Acceleration</h3><p>We're enablers, not gatekeepers. We help innovations succeed by connecting stakeholders around shared goals.</p></div>
+    </div>
+  </div></section>
+
+  <section class="section section-off" id="vision"><div class="container">
+    <div class="section-label">Looking Ahead</div>
+    <div class="section-title">Our 3-Year Vision</div>
+    <div class="section-subtitle">Building the infrastructure for reproductive health innovation — systematically, sustainably.</div>
+    <div class="timeline">
+      <div class="timeline-item"><div class="timeline-year">Year 1 — 2026</div><h3>Foundation &amp; Proof of Concept</h3><p>Establish organizational structure and governance. Recruit founding team. Develop validation protocols. Complete first validation studies. Publish methodology and initial results through peer review.</p></div>
+      <div class="timeline-item"><div class="timeline-year">Year 2 — 2027</div><h3>Scale &amp; Reputation</h3><p>Expand partner clinic network across regions. Launch formal membership programs. Build the validation registry. Achieve financial sustainability and brand recognition.</p></div>
+      <div class="timeline-item"><div class="timeline-year">Year 3 — 2028</div><h3>Leadership &amp; Global Expansion</h3><p>Establish international presence. "RHRI Validated" becomes a recognized mark of quality. Influence clinical guidelines. Launch educational programs and certifications.</p></div>
+    </div>
+  </div></section>
+
+  <section class="cta-section"><div class="container">
+    <h2>This is the foundation.<br><em>Now we build.</em></h2>
+    <p>Join us in transforming how innovation reaches reproductive health practice.</p>
+    <a class="btn-purple" onclick="openContact()">Get Involved</a>
+  </div></section>
+</div>
+
+<!-- ABOUT -->
+<div class="page" id="page-about">
+  <section class="about-hero"><div class="container">
+    <div class="section-label">About RHRI</div>
+    <h1>Who We Are</h1>
+    <p>A global institute built to bridge the gap between innovation and clinical implementation in reproductive health and assisted reproductive technology.</p>
+  </div></section>
+
+  <section class="section section-white"><div class="container">
+    <div class="about-content">
+      <div>
+        <div class="about-block"><h3>Our Purpose</h3><p>To drive high-impact innovation in reproductive health. We exist to ensure that the explosion of scientific knowledge and technological capability translates into meaningful improvements in patient care, clinical efficiency, and equitable access.</p></div>
+        <div class="about-block"><h3>Our Mission</h3><p>To be the essential partner that validates and advances innovations for clinical use, connects innovators, clinics, academia, and patients around shared standards, accelerates high-value technologies from prototype to practice, and ensures every new technology delivers measurable patient value.</p></div>
+        <div class="about-block"><h3>Our Vision</h3><p>By 2036, RHRI is recognized globally as the gold standard for reproductive health innovation validation — the first call innovators make, the trusted source clinics consult, and the essential infrastructure that grew the entire market.</p></div>
+      </div>
+      <div>
+        <div class="about-block"><h3>Our Story</h3><div class="placeholder">[To be completed — Founding story, what inspired the creation of RHRI, the personal and professional journey that led here. What moment made it clear this institute needed to exist?]</div></div>
+        <div class="about-block"><h3>What Makes Us Different</h3><p>We occupy the intersection of rigorous science and practical clinical application that no other entity currently fills. We are not a regulatory body, a research lab, or a consulting firm. We validate, enable, connect, standardize, and accelerate — complementing the existing ecosystem, not competing with it.</p></div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="section section-off"><div class="container">
+    <div class="section-label">Our Principles</div>
+    <div class="section-title">What Guides Us</div>
+    <div class="section-subtitle">Seven strategic principles underpin every decision we make.</div>
+    <div class="values-grid" style="margin-top:36px">
+      <div class="value-item"><h4>Independence Above All</h4><p>Transparent funding, diverse governance, published methodology. Without independence, our validation is worthless.</p></div>
+      <div class="value-item"><h4>Evidence Always Wins</h4><p>Data over opinions. Real-world results over marketing claims. Our credibility depends on honesty about what works.</p></div>
+      <div class="value-item"><h4>Collaboration Over Competition</h4><p>We partner to enable success, connect stakeholders, and create win-win outcomes.</p></div>
+      <div class="value-item"><h4>Transparency as Default</h4><p>Protocols, results, methodology, and governance — all public by default.</p></div>
+      <div class="value-item"><h4>Value as the Ultimate Measure</h4><p>Does it help patients? Improve outcomes? Reduce costs? We exist for patients.</p></div>
+      <div class="value-item"><h4>Long-Term Thinking</h4><p>Sustainable impact over quick wins. Building for decades, not months.</p></div>
+      <div class="value-item" style="grid-column:1/-1;max-width:50%;margin:0 auto"><h4>Continuous Learning</h4><p>The field evolves rapidly. We evolve with it — learning, adapting, sharing.</p></div>
+    </div>
+  </div></section>
+
+  <section class="section section-white"><div class="container">
+    <div class="section-label">Our People</div>
+    <div class="section-title">Leadership Team</div>
+    <div class="section-subtitle">A multidisciplinary team spanning academia, technology, clinical operations, and commercial strategy.</div>
+    <div class="team-grid">
+      <div class="team-card"><div class="team-avatar">&#128100;</div><h4>[Founder Name]</h4><div class="role">Founder &amp; Director</div><p>[Bio to be added]</p></div>
+      <div class="team-card"><div class="team-avatar">&#128100;</div><h4>[Name]</h4><div class="role">Scientific Director</div><p>[Bio to be added]</p></div>
+      <div class="team-card"><div class="team-avatar">&#128100;</div><h4>[Name]</h4><div class="role">Operations Lead</div><p>[Bio to be added]</p></div>
+    </div>
+  </div></section>
+
+  <section class="section section-off"><div class="container">
+    <div class="section-label">Advisors</div>
+    <div class="section-title">Scientific Advisory Board</div>
+    <div class="placeholder" style="max-width:640px;margin-top:20px">[To be completed — Advisory board members, affiliations, expertise, and governance roles.]</div>
+  </div></section>
+
+  <section class="section section-white"><div class="container">
+    <div class="section-label">Network</div>
+    <div class="section-title">Partners &amp; Collaborators</div>
+    <div class="placeholder" style="max-width:640px;margin-top:20px">[To be completed — Founding clinic partners, academic collaborators, industry partners, and funding bodies.]</div>
+  </div></section>
+
+  <section class="cta-section"><div class="container">
+    <h2>Want to be part of <em>the future?</em></h2>
+    <p>Whether you're an innovator, a clinic, a researcher, or a funder — we'd love to connect.</p>
+    <a class="btn-purple" onclick="openContact()">Contact Us</a>
+  </div></section>
+</div>
+
+<!-- CONTACT MODAL -->
+<div class="modal-overlay" id="contactModal" onclick="if(event.target===this)closeContact()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeContact()">&times;</button>
+    <div id="contactFormWrap">
+      <div class="modal-header">
+        <h2>Get in Touch</h2>
+        <p>Whether you're an innovator, clinic, researcher, or funder — we'd love to hear from you.</p>
+      </div>
+      <div class="modal-body">
+        <form id="rhriForm" onsubmit="return submitContact(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name <span class="req">*</span></label>
+              <input type="text" name="firstName" required placeholder="First name">
+            </div>
+            <div class="form-group">
+              <label>Last Name <span class="req">*</span></label>
+              <input type="text" name="lastName" required placeholder="Last name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email <span class="req">*</span></label>
+            <input type="email" name="email" required placeholder="you@example.com">
+          </div>
+          <div class="form-group">
+            <label>Organization</label>
+            <input type="text" name="organization" placeholder="Company, clinic, or institution">
+          </div>
+          <div class="form-group">
+            <label>I am a... <span class="req">*</span></label>
+            <select name="role" required>
+              <option value="" disabled selected>Select your role</option>
+              <option value="Innovator / MedTech Company">Innovator / MedTech Company</option>
+              <option value="Clinic / Clinic Group">Clinic / Clinic Group</option>
+              <option value="Researcher / Academic">Researcher / Academic</option>
+              <option value="Investor / Funder">Investor / Funder</option>
+              <option value="Patient / Advocate">Patient / Advocate</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Message <span class="req">*</span></label>
+            <textarea name="message" required placeholder="Tell us how you'd like to be involved, or ask us anything..."></textarea>
+          </div>
+          <button type="submit" class="form-submit">Send Message</button>
+          <p class="form-note">Your message will be sent to the RHRI team at dm@rhri.bio</p>
+        </form>
+      </div>
+    </div>
+    <div class="form-success" id="formSuccess">
+      <div class="check-icon">&#10003;</div>
+      <h3>Message Sent</h3>
+      <p>Thank you for reaching out. Your email client has been opened with your message. Please press send to complete delivery to the RHRI team.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer><div class="footer-inner">
+  <div class="footer-brand">
+    <div class="footer-logo-wrap"><svg><use href="#rhri-logo"/></svg><span>RHRI</span></div>
+    <p>Reproductive Health Research Institute. Enabling innovation. Validating impact.</p>
+  </div>
+  <div class="footer-col"><h4>Institute</h4><a onclick="showPage('about')">About Us</a><a onclick="showPage('home');setTimeout(()=>document.getElementById('framework').scrollIntoView({behavior:'smooth'}),100)">Framework</a><a onclick="showPage('home');setTimeout(()=>document.getElementById('vision').scrollIntoView({behavior:'smooth'}),100)">Vision</a></div>
+  <div class="footer-col"><h4>For Partners</h4><a onclick="openContact()">Innovators</a><a onclick="openContact()">Clinics</a><a onclick="openContact()">Funders</a></div>
+  <div class="footer-col"><h4>Connect</h4><a href="mailto:dm@rhri.bio">dm@rhri.bio</a><a>LinkedIn</a><a>Newsletter</a></div>
+</div><div class="footer-bottom"><p>&copy; 2026 RHRI — Reproductive Health Research Institute</p><p>Enabling innovation. Validating impact.</p></div></footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(function(e) { e.classList.remove('active'); });
+  document.getElementById('page-' + p).classList.add('active');
+  document.querySelectorAll('.nav-links a[data-page]').forEach(function(a) {
+    a.classList.toggle('active', a.dataset.page === p);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('mainNav').classList.remove('open');
+}
+
+window.addEventListener('scroll', function() {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+function openContact() {
+  document.getElementById('contactModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('contactFormWrap').style.display = 'block';
+  document.getElementById('formSuccess').classList.remove('active');
+  document.getElementById('mainNav').classList.remove('open');
+}
+
+function closeContact() {
+  document.getElementById('contactModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function submitContact(e) {
+  e.preventDefault();
+  var f = document.getElementById('rhriForm');
+  var fd = new FormData(f);
+  var name = fd.get('firstName') + ' ' + fd.get('lastName');
+  var email = fd.get('email');
+  var org = fd.get('organization') || 'Not specified';
+  var role = fd.get('role');
+  var msg = fd.get('message');
+  var subject = encodeURIComponent('RHRI Inquiry: ' + name + ' (' + role + ')');
+  var body = encodeURIComponent(
+    'Name: ' + name + '\n' +
+    'Email: ' + email + '\n' +
+    'Organization: ' + org + '\n' +
+    'Role: ' + role + '\n\n' +
+    'Message:\n' + msg
+  );
+  window.open('mailto:dm@rhri.bio?subject=' + subject + '&body=' + body, '_self');
+  document.getElementById('contactFormWrap').style.display = 'none';
+  document.getElementById('formSuccess').classList.add('active');
+  f.reset();
+  return false;
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeContact();
+});
+
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(n) {
+    if (n.isIntersecting) {
+      n.target.style.opacity = '1';
+      n.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.pillar-card,.audience-card,.strat-card,.problem-item,.timeline-item,.value-item,.team-card,.about-block').forEach(function(el) {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity
