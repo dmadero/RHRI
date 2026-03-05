@@ -93,20 +93,10 @@ nav.scrolled { background: rgba(255,255,255,0.97); box-shadow: 0 4px 24px rgba(1
 .section-subtitle { font-size: 1.05rem; color: var(--gray-400); max-width: 600px; line-height: 1.8; font-weight: 300; }
 .section-navy .section-subtitle { color: rgba(255,255,255,0.55); }
 
-/* PROBLEM */
-.problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; margin-top: 56px; align-items: start; }
-.problem-left h3 { font-family: var(--font-display); font-size: 1.55rem; font-weight: 600; color: var(--navy-800); margin-bottom: 18px; line-height: 1.3; }
-.problem-left p { color: var(--gray-400); line-height: 1.9; font-weight: 300; font-size: 0.95rem; }
-.problem-items { display: flex; flex-direction: column; gap: 16px; }
-.problem-item { background: var(--white); border: 1px solid var(--gray-100); border-radius: 14px; padding: 24px 28px; transition: all 0.3s ease; }
-.problem-item:hover { border-color: var(--purple-200); box-shadow: 0 8px 24px rgba(15,27,51,0.04); transform: translateX(4px); }
-.problem-item .num { font-size: 11px; color: var(--purple-500); font-weight: 600; letter-spacing: 1.5px; margin-bottom: 4px; }
-.problem-item h4 { color: var(--navy-800); font-weight: 500; font-size: 0.95rem; margin-bottom: 4px; }
-.problem-item p { color: var(--gray-400); font-size: 0.85rem; line-height: 1.7; font-weight: 300; }
-
 /* FRAMEWORK */
 .framework-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 56px; }
 .pillar-card { background: var(--white); border: 1px solid var(--gray-100); border-radius: 16px; padding: 32px 24px; transition: all 0.35s ease; position: relative; overflow: hidden; }
+.section-off .pillar-card { background: var(--white); }
 .pillar-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--navy-700), var(--purple-600)); transform: scaleX(0); transform-origin: left; transition: transform 0.35s ease; }
 .pillar-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(15,27,51,0.07); border-color: var(--purple-100); }
 .pillar-card:hover::before { transform: scaleX(1); }
@@ -185,6 +175,35 @@ footer { background: var(--white); border-top: 1px solid var(--gray-100); paddin
 .team-card .role { font-size: 0.8rem; color: var(--purple-500); font-weight: 400; margin-bottom: 8px; }
 .team-card p { font-size: 0.8rem; color: var(--gray-400); line-height: 1.7; font-weight: 300; font-style: italic; }
 
+/* INNOVATION VERTICALS */
+.innovation-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 56px; }
+.innovation-card { background: var(--white); border: 1px solid var(--gray-100); border-radius: 16px; padding: 36px 30px; transition: all 0.35s ease; position: relative; overflow: hidden; }
+.innovation-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--navy-700), var(--purple-600)); transform: scaleX(0); transform-origin: left; transition: transform 0.35s ease; }
+.innovation-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(15,27,51,0.07); border-color: var(--purple-100); }
+.innovation-card:hover::before { transform: scaleX(1); }
+.innovation-icon { width: 52px; height: 52px; background: var(--purple-50); border: 1px solid var(--purple-100); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 18px; }
+.innovation-card h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; color: var(--navy-800); margin-bottom: 10px; }
+.innovation-card p { font-size: 0.88rem; color: var(--gray-400); line-height: 1.8; font-weight: 300; margin-bottom: 14px; }
+.innovation-examples { font-size: 0.82rem; color: var(--purple-500); font-weight: 400; line-height: 1.7; }
+.innovation-examples strong { font-weight: 500; color: var(--gray-600); }
+
+/* FRAMEWORK DETAIL */
+.framework-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 56px; align-items: start; }
+.framework-detail-text h3 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--navy-800); margin-bottom: 14px; }
+.framework-detail-text p { color: var(--gray-400); line-height: 1.9; font-weight: 300; font-size: 0.95rem; margin-bottom: 20px; }
+.framework-detail-list { list-style: none; padding: 0; }
+.framework-detail-list li { padding: 18px 22px; border: 1px solid var(--gray-100); border-radius: 12px; margin-bottom: 12px; transition: all 0.25s ease; }
+.framework-detail-list li:hover { border-color: var(--purple-200); box-shadow: 0 4px 16px rgba(15,27,51,0.03); }
+.framework-detail-list li strong { display: block; font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; color: var(--navy-800); margin-bottom: 4px; }
+.framework-detail-list li span { font-size: 0.85rem; color: var(--gray-400); line-height: 1.7; font-weight: 300; }
+
+/* OPERATING MODEL */
+.model-features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 56px; }
+.model-feature { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 28px 24px; transition: all 0.3s ease; }
+.model-feature:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.18); }
+.model-feature h4 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 8px; }
+.model-feature p { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.8; font-weight: 300; }
+
 /* CONTACT MODAL */
 .modal-overlay { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(15,27,51,0.45); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); align-items: center; justify-content: center; padding: 20px; }
 .modal-overlay.active { display: flex; animation: modalFade 0.25s ease; }
@@ -220,11 +239,14 @@ footer { background: var(--white); border-top: 1px solid var(--gray-100); paddin
   .nav-links { display: none; }
   .mobile-toggle { display: block; }
   nav.open .nav-links { display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0; background: var(--white); padding: 20px; border-bottom: 1px solid var(--gray-100); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
-  .problem-grid, .about-content { grid-template-columns: 1fr; }
+  .about-content { grid-template-columns: 1fr; }
   .framework-grid { grid-template-columns: repeat(2, 1fr); }
   .strat-pillars, .audience-grid { grid-template-columns: 1fr; }
   .footer-inner { grid-template-columns: 1fr 1fr; }
   .team-grid, .values-grid { grid-template-columns: 1fr; }
+  .innovation-grid { grid-template-columns: 1fr; }
+  .framework-detail-grid { grid-template-columns: 1fr; }
+  .model-features { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
   .framework-grid, .footer-inner { grid-template-columns: 1fr; }
@@ -257,82 +279,114 @@ footer { background: var(--white); border-top: 1px solid var(--gray-100); paddin
   <div class="nav-links" id="navLinks">
     <a onclick="showPage('home')" class="active" data-page="home">Home</a>
     <a onclick="showPage('about')" data-page="about">About Us</a>
-    <a onclick="showPage('home'); setTimeout(()=>document.getElementById('framework').scrollIntoView({behavior:'smooth'}),100)">Framework</a>
-    <a onclick="showPage('home'); setTimeout(()=>document.getElementById('vision').scrollIntoView({behavior:'smooth'}),100)">Vision</a>
+    <a onclick="showPage('framework')" data-page="framework">Framework</a>
+    <a onclick="showPage('innovation')" data-page="innovation">Areas of Innovation</a>
     <a class="cta-btn" onclick="openContact()">Get Involved</a>
   </div>
   <button class="mobile-toggle" onclick="document.getElementById('mainNav').classList.toggle('open')"><span></span><span></span><span></span></button>
 </div></nav>
 
-<!-- HOME -->
+<!-- ==================== HOME ==================== -->
 <div class="page active" id="page-home">
   <section class="hero"><div class="hero-content">
     <div class="hero-logo"><svg><use href="#rhri-logo"/></svg></div>
     <div class="hero-badge">Reproductive Health Research Institute</div>
     <h1>Enabling Innovation.<br><em>Validating Impact.</em></h1>
-    <p class="hero-sub">Bridging the gap between innovation and clinical implementation in reproductive health — identifying, validating, and accelerating the technologies that improve outcomes and access.</p>
+    <p class="hero-sub">We evaluate, validate, and guide new reproductive health technologies from concept to real-world clinical implementation — using decentralized research networks and rigorous operational frameworks.</p>
     <div class="hero-actions">
       <a class="btn-primary" onclick="showPage('about')">Learn About RHRI</a>
-      <a class="btn-outline" onclick="document.getElementById('framework').scrollIntoView({behavior:'smooth'})">Our Framework</a>
+      <a class="btn-outline" onclick="showPage('framework')">Our Framework</a>
     </div>
   </div></section>
 
-  <div class="essence-bar"><p>"The right innovation, validated and delivered — to every patient who needs it."</p></div>
+  <div class="essence-bar"><p>"A global system that accelerates safe, scalable, and impactful innovation in reproductive health."</p></div>
 
-  <section class="section section-off"><div class="container">
-    <div class="section-label">The Challenge</div>
-    <div class="section-title">The Innovation Valley of Death</div>
-    <div class="section-subtitle">Promising innovations fail to reach clinical practice — not because they lack merit, but because of systemic barriers in the translation process.</div>
-    <div class="problem-grid">
-      <div class="problem-left">
-        <h3>We are at an inflection point in reproductive health</h3>
-        <p>From basic biology to AI-driven embryo assessment, from microfluidics to genomics — research across multiple frontiers is generating unprecedented insights. Yet most innovations stall before reaching patients. The field needs infrastructure to separate signal from noise, and to move proven innovation into practice.</p>
-      </div>
-      <div class="problem-items">
-        <div class="problem-item"><div class="num">01</div><h4>Misaligned Expectations</h4><p>Innovators expect adoption; clinics expect finished, validated products. This mismatch creates friction and delays.</p></div>
-        <div class="problem-item"><div class="num">02</div><h4>Fragmented Validation</h4><p>No standard framework exists. Products reach market without operational validation or measurable impact proof.</p></div>
-        <div class="problem-item"><div class="num">03</div><h4>Risk Asymmetry</h4><p>Clinics bear all adoption risk. No reliable pre-validation mechanism protects early adopters.</p></div>
-        <div class="problem-item"><div class="num">04</div><h4>Market Inefficiency</h4><p>Valuable innovations die from adoption barriers while mediocre ones persist on marketing alone.</p></div>
-      </div>
-    </div>
-  </div></section>
-
-  <section class="section section-white" id="framework"><div class="container">
+  <!-- FRAMEWORK PREVIEW (moved above) -->
+  <section class="section section-off" id="framework-preview"><div class="container">
     <div class="section-label">Our Approach</div>
     <div class="section-title">The Four-Pillar Validation Framework</div>
-    <div class="section-subtitle">We assess innovations across four essential dimensions simultaneously — a comprehensive approach no other entity provides.</div>
+    <div class="section-subtitle">Every innovation is assessed across four essential dimensions simultaneously — a comprehensive approach no other entity provides.</div>
     <div class="framework-grid">
-      <div class="pillar-card"><div class="pillar-num">01</div><h3>Replicability</h3><p>Can it be reproduced reliably across different settings? We test for scientific consistency, protocol clarity, and quality control.</p></div>
-      <div class="pillar-card"><div class="pillar-num">02</div><h3>Scalability</h3><p>Can it work at the scale clinics need? We evaluate workflow integration, resource requirements, and training burden.</p></div>
-      <div class="pillar-card"><div class="pillar-num">03</div><h3>Sustainability</h3><p>Can clinics maintain this long-term? We assess economic viability, operational fit, and lasting value creation.</p></div>
-      <div class="pillar-card"><div class="pillar-num">04</div><h3>Value</h3><p>Does it improve outcomes, reduce costs, or increase access? The ultimate measure — technology for technology's sake helps no one.</p></div>
+      <div class="pillar-card"><div class="pillar-num">01</div><h3>Replicability</h3><p>Can results be reproduced across operators, labs, and geographies — both intra- and inter-operator?</p></div>
+      <div class="pillar-card"><div class="pillar-num">02</div><h3>Scalability</h3><p>Can the product function effectively at clinic level and across workforce skill distributions? Does scale improve consistency?</p></div>
+      <div class="pillar-card"><div class="pillar-num">03</div><h3>Sustainability</h3><p>Does performance and unit economics hold or improve as volume increases? Can clinics implement it without long-term strain?</p></div>
+      <div class="pillar-card"><div class="pillar-num">04</div><h3>Patient Value</h3><p>Reduced cost, improved outcomes, shorter time-to-baby, higher accessibility — the ultimate measure of any innovation.</p></div>
+    </div>
+    <div style="text-align:center; margin-top:40px;">
+      <a class="btn-outline" onclick="showPage('framework')">Explore Our Full Framework &rarr;</a>
     </div>
   </div></section>
 
+  <!-- WHY NOW -->
+  <section class="section section-white"><div class="container">
+    <div class="section-label">Why Now</div>
+    <div class="section-title">An Inflection Point in Reproductive Health</div>
+    <div class="section-subtitle">The field is generating unprecedented insights — but most innovations stall before reaching patients.</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 56px; align-items: start;">
+      <div>
+        <p style="color:var(--gray-400); line-height:1.9; font-weight:300; font-size:0.95rem; margin-bottom:20px;">From basic biology to AI-driven embryo assessment, from microfluidics to genomics — research across multiple frontiers is producing transformative knowledge. Basic markers once used only for reproduction are now recognized as general markers of health.</p>
+        <p style="color:var(--gray-400); line-height:1.9; font-weight:300; font-size:0.95rem;">Yet the current dynamic is broken: start-ups with limited capital pay clinics significant sums to trial their products, only to see them arrive dead on launch or take years to reach clinical practice. The field needs infrastructure to separate signal from noise and move proven innovation into practice.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div style="background:var(--off-white); border:1px solid var(--gray-100); border-radius:14px; padding:24px 28px;">
+          <h4 style="color:var(--navy-800); font-weight:500; font-size:0.95rem; margin-bottom:6px; font-family:var(--font-display); font-size:1.1rem;">Misaligned Incentives</h4>
+          <p style="color:var(--gray-400); font-size:0.85rem; line-height:1.7; font-weight:300;">Innovators expect adoption while clinics expect finished, validated products — creating friction and costly delays at every stage.</p>
+        </div>
+        <div style="background:var(--off-white); border:1px solid var(--gray-100); border-radius:14px; padding:24px 28px;">
+          <h4 style="color:var(--navy-800); font-weight:500; font-size:0.95rem; margin-bottom:6px; font-family:var(--font-display); font-size:1.1rem;">Fragmented Validation</h4>
+          <p style="color:var(--gray-400); font-size:0.85rem; line-height:1.7; font-weight:300;">No standard framework exists to validate innovation before market entry. Products reach clinics without operational validation or measurable impact proof.</p>
+        </div>
+        <div style="background:var(--off-white); border:1px solid var(--gray-100); border-radius:14px; padding:24px 28px;">
+          <h4 style="color:var(--navy-800); font-weight:500; font-size:0.95rem; margin-bottom:6px; font-family:var(--font-display); font-size:1.1rem;">Market Inefficiency</h4>
+          <p style="color:var(--gray-400); font-size:0.85rem; line-height:1.7; font-weight:300;">Valuable innovations die from adoption barriers while mediocre ones persist on marketing alone. Clinics bear all adoption risk.</p>
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- ECOSYSTEM -->
   <section class="section section-navy"><div class="container">
     <div class="section-label">Our Ecosystem</div>
     <div class="section-title">Who We Serve</div>
-    <div class="section-subtitle">RHRI connects the entire reproductive health ecosystem around shared standards and validated innovation.</div>
+    <div class="section-subtitle">RHRI connects three core stakeholders around shared standards and validated innovation.</div>
     <div class="audience-grid">
-      <div class="audience-card"><div class="audience-icon">&#9889;</div><h3>Innovators</h3><p>Your essential partner from prototype to market — providing rigorous, real-world validation that clinics trust, reducing costs, and accelerating adoption across multiple markets.</p></div>
-      <div class="audience-card"><div class="audience-icon">&#127973;</div><h3>Clinic Groups</h3><p>First access to rigorously validated innovations that work in real-world settings. We reduce your risk, improve outcomes, and position you as a leader in advanced care.</p></div>
-      <div class="audience-card"><div class="audience-icon">&#128202;</div><h3>Funding Bodies</h3><p>The infrastructure that ensures innovation investments deliver real-world value — expanding the market, accelerating translation, and maximizing every dollar invested.</p></div>
-      <div class="audience-card"><div class="audience-icon">&#10084;&#65039;</div><h3>Patients</h3><p>When you see RHRI validation, you know it works in the real world. We ensure innovations used in your care are rigorously proven to improve outcomes.</p></div>
+      <div class="audience-card"><div class="audience-icon">&#9889;</div><h3>Innovators</h3><p>Early-stage or growth-stage technologies that need validation, pilots, or pathways to market. We provide rigorous, real-world validation that clinics trust — reducing costs and accelerating adoption across multiple markets.</p></div>
+      <div class="audience-card"><div class="audience-icon">&#127973;</div><h3>Clinics &amp; Clinic Groups</h3><p>Sites for research, trials, and operational validation. First access to rigorously validated innovations, with protocols, SOPs, and implementation strategies that reduce risk and improve outcomes.</p></div>
+      <div class="audience-card"><div class="audience-icon">&#10084;&#65039;</div><h3>Patients</h3><p>The ultimate beneficiaries. Their outcomes and cost structure guide all decisions. When you see RHRI validation, you know it works in the real world — proven to improve outcomes, reduce costs, and shorten time-to-baby.</p></div>
+      <div class="audience-card"><div class="audience-icon">&#128202;</div><h3>Funding Bodies</h3><p>The infrastructure that ensures innovation investments deliver real-world value — expanding the market, accelerating translation, and maximizing every dollar invested in reproductive health.</p></div>
     </div>
   </div></section>
 
+  <!-- OPERATING MODEL PREVIEW -->
   <section class="section section-white"><div class="container">
-    <div class="section-label">Guiding Principles</div>
-    <div class="section-title">Our Strategic Pillars</div>
-    <div class="section-subtitle">Three core pillars guide every decision, communication, and initiative at RHRI.</div>
+    <div class="section-label">Operating Model</div>
+    <div class="section-title">Decentralized by Design</div>
+    <div class="section-subtitle">No single headquarters — talent and partners distributed globally, running pilots where conditions are optimal.</div>
     <div class="strat-pillars">
-      <div class="strat-card"><div class="strat-icon">&#127919;</div><h3>Patient-Centered Value</h3><p>Every innovation must demonstrably improve outcomes, reduce costs, or increase access. Patient value is the ultimate measure of success.</p></div>
+      <div class="strat-card"><div class="strat-icon">&#127758;</div><h3>Global Network</h3><p>Collaboration with clinics in multiple jurisdictions. Flexible incorporation to leverage regulatory and operational advantages internationally.</p></div>
       <div class="strat-card"><div class="strat-icon">&#128300;</div><h3>Evidence-Based Excellence</h3><p>Scientific rigor meets real-world practicality. We maintain the highest standards while staying grounded in clinical reality.</p></div>
-      <div class="strat-card"><div class="strat-icon">&#129309;</div><h3>Collaborative Acceleration</h3><p>We're enablers, not gatekeepers. We help innovations succeed by connecting stakeholders around shared goals.</p></div>
+      <div class="strat-card"><div class="strat-icon">&#129309;</div><h3>Collaborative Acceleration</h3><p>We're enablers, not gatekeepers. We connect innovators, clinics, academia, and patients around shared goals and standards.</p></div>
     </div>
   </div></section>
 
-  <section class="section section-off" id="vision"><div class="container">
+  <!-- AREAS OF INNOVATION PREVIEW -->
+  <section class="section section-off"><div class="container">
+    <div class="section-label">Focus Areas</div>
+    <div class="section-title">Four Verticals of Innovation</div>
+    <div class="section-subtitle">Organized research and validation across the full spectrum of reproductive health advancement.</div>
+    <div class="innovation-grid">
+      <div class="innovation-card"><div class="innovation-icon">&#128187;</div><h3>Software</h3><p>AI-driven improvements in reproductive health workflows — from embryo assessment algorithms to clinical decision tools.</p></div>
+      <div class="innovation-card"><div class="innovation-icon">&#9881;&#65039;</div><h3>Hardware</h3><p>Tools and devices that improve precision, automation, or consistency in lab and clinical environments.</p></div>
+      <div class="innovation-card"><div class="innovation-icon">&#128260;</div><h3>Process Innovation</h3><p>Re-engineering workflows to improve efficiency, reduce cost, or shorten time-to-treatment.</p></div>
+      <div class="innovation-card"><div class="innovation-icon">&#129516;</div><h3>Biotech</h3><p>Products requiring clinical research to validate outcomes, biomarkers, or biological mechanisms.</p></div>
+    </div>
+    <div style="text-align:center; margin-top:40px;">
+      <a class="btn-outline" onclick="showPage('innovation')">Explore All Areas &rarr;</a>
+    </div>
+  </div></section>
+
+  <!-- VISION / TIMELINE -->
+  <section class="section section-white" id="vision"><div class="container">
     <div class="section-label">Looking Ahead</div>
     <div class="section-title">Our 3-Year Vision</div>
     <div class="section-subtitle">Building the infrastructure for reproductive health innovation — systematically, sustainably.</div>
@@ -350,7 +404,7 @@ footer { background: var(--white); border-top: 1px solid var(--gray-100); paddin
   </div></section>
 </div>
 
-<!-- ABOUT -->
+<!-- ==================== ABOUT US ==================== -->
 <div class="page" id="page-about">
   <section class="about-hero"><div class="container">
     <div class="section-label">About RHRI</div>
@@ -362,12 +416,12 @@ footer { background: var(--white); border-top: 1px solid var(--gray-100); paddin
     <div class="about-content">
       <div>
         <div class="about-block"><h3>Our Purpose</h3><p>To drive high-impact innovation in reproductive health. We exist to ensure that the explosion of scientific knowledge and technological capability translates into meaningful improvements in patient care, clinical efficiency, and equitable access.</p></div>
-        <div class="about-block"><h3>Our Mission</h3><p>To be the essential partner that validates and advances innovations for clinical use, connects innovators, clinics, academia, and patients around shared standards, accelerates high-value technologies from prototype to practice, and ensures every new technology delivers measurable patient value.</p></div>
-        <div class="about-block"><h3>Our Vision</h3><p>By 2036, RHRI is recognized globally as the gold standard for reproductive health innovation validation — the first call innovators make, the trusted source clinics consult, and the essential infrastructure that grew the entire market.</p></div>
+        <div class="about-block"><h3>Our Mission</h3><p>To evaluate, validate, and guide new technologies from concept to real-world clinical implementation — using decentralized research networks and rigorous operational frameworks. We connect innovators, clinics, academia, and patients around shared standards, accelerate high-value technologies from prototype to practice, and ensure every new technology delivers measurable patient value.</p></div>
+        <div class="about-block"><h3>Our Vision</h3><p>A global system that accelerates safe, scalable, and impactful innovation in reproductive health. By 2036, RHRI is recognized globally as the gold standard for reproductive health innovation validation — the first call innovators make, the trusted source clinics consult, and the essential infrastructure that grew the entire market.</p></div>
       </div>
       <div>
-        <div class="about-block"><h3>Our Story</h3><div class="placeholder">[To be completed — Founding story, what inspired the creation of RHRI, the personal and professional journey that led here. What moment made it clear this institute needed to exist?]</div></div>
         <div class="about-block"><h3>What Makes Us Different</h3><p>We occupy the intersection of rigorous science and practical clinical application that no other entity currently fills. We are not a regulatory body, a research lab, or a consulting firm. We validate, enable, connect, standardize, and accelerate — complementing the existing ecosystem, not competing with it.</p></div>
+        <div class="about-block"><h3>Operating Model</h3><p>No single headquarters — talent and partners distributed globally. We collaborate with clinics in multiple jurisdictions, leveraging regulatory and operational advantages internationally. Our flexible incorporation strategy allows us to run pilots and research where conditions are optimal, connecting innovators, clinics, and patients through a decentralized network.</p></div>
       </div>
     </div>
   </div></section>
@@ -392,9 +446,9 @@ footer { background: var(--white); border-top: 1px solid var(--gray-100); paddin
     <div class="section-title">Leadership Team</div>
     <div class="section-subtitle">A multidisciplinary team spanning academia, technology, clinical operations, and commercial strategy.</div>
     <div class="team-grid">
-      <div class="team-card"><div class="team-avatar">&#128100;</div><h4>[Founder Name]</h4><div class="role">Founder &amp; Director</div><p>[Bio to be added]</p></div>
-      <div class="team-card"><div class="team-avatar">&#128100;</div><h4>[Name]</h4><div class="role">Scientific Director</div><p>[Bio to be added]</p></div>
-      <div class="team-card"><div class="team-avatar">&#128100;</div><h4>[Name]</h4><div class="role">Operations Lead</div><p>[Bio to be added]</p></div>
+      <div class="team-card"><div class="team-avatar">&#128100;</div><h4>Daniel Madero</h4><div class="role">Founder &amp; Director</div><p>Fertility and reproductive-health executive focused on scaling clinics and building high-performance operating models across the Americas and Europe. Previously CEO of Fertilidad Integral; currently Senior Advisor to RHEA and GenPrime.</p></div>
+      <div class="team-card"><div class="team-avatar">&#128100;</div><h4>Cynthia Hudson</h4><div class="role">Clinical Strategy</div><p>SVP of Clinics at TMRW Life Sciences. Embryologist and medical technologist with 20+ years in reproductive medicine. Founder of NOVA Genomics and owner of Perch Fertility in New Jersey.</p></div>
+      <div class="team-card"><div class="team-avatar">&#128100;</div><h4>Felicitas Aspiroz</h4><div class="role">Research &amp; Science</div><p>Reproductive scientist and researcher at Universitat Autònoma de Barcelona (UAB). Her work in the Eugin Group research ecosystem bridges rigorous lab science with clinically relevant questions shaping modern IVF practice.</p></div>
     </div>
   </div></section>
 
@@ -414,6 +468,127 @@ footer { background: var(--white); border-top: 1px solid var(--gray-100); paddin
     <h2>Want to be part of <em>the future?</em></h2>
     <p>Whether you're an innovator, a clinic, a researcher, or a funder — we'd love to connect.</p>
     <a class="btn-purple" onclick="openContact()">Contact Us</a>
+  </div></section>
+</div>
+
+<!-- ==================== FRAMEWORK ==================== -->
+<div class="page" id="page-framework">
+  <section class="about-hero"><div class="container">
+    <div class="section-label">Our Framework</div>
+    <h1>The Four-Pillar<br>Validation Framework</h1>
+    <p>Every innovation is evaluated through four foundational pillars that together form RHRI's universal decision-making rubric — ensuring only technologies with real-world merit reach clinical practice.</p>
+  </div></section>
+
+  <section class="section section-white"><div class="container">
+    <div class="section-label">Core Principles</div>
+    <div class="section-title">How We Evaluate Innovation</div>
+    <div class="section-subtitle">These four pillars are applied simultaneously to every technology we assess, creating a comprehensive validation standard no other entity provides.</div>
+    <div class="framework-grid">
+      <div class="pillar-card"><div class="pillar-num">01</div><h3>Replicability</h3><p>Can results be reproduced across operators, labs, and geographies — both intra- and inter-operator? We test for scientific consistency, protocol clarity, and quality control.</p></div>
+      <div class="pillar-card"><div class="pillar-num">02</div><h3>Scalability</h3><p>Can the product function effectively at clinic level and across workforce skill distributions? We evaluate workflow integration, resource requirements, and training burden. Does scale improve consistency?</p></div>
+      <div class="pillar-card"><div class="pillar-num">03</div><h3>Sustainability</h3><p>Does performance and unit economics hold or improve as case volume increases? Can clinics implement it without long-term operational or financial strain?</p></div>
+      <div class="pillar-card"><div class="pillar-num">04</div><h3>Patient Value Addition</h3><p>Reduced cost. Improved outcomes. Shorter time-to-baby. Higher accessibility or quality of experience. Technology for technology's sake helps no one.</p></div>
+    </div>
+  </div></section>
+
+  <section class="section section-off"><div class="container">
+    <div class="section-label">In Practice</div>
+    <div class="section-title">From Assessment to Implementation</div>
+    <div class="framework-detail-grid">
+      <div class="framework-detail-text">
+        <h3>A Rigorous, Practical Process</h3>
+        <p>Our framework goes beyond academic evaluation. We test technologies in real-world clinical environments through our decentralized network, ensuring that validation reflects actual operating conditions — not just controlled lab settings.</p>
+        <p>Each pillar generates specific, measurable criteria that innovators must meet. This transparency helps both innovators understand what's required and clinics trust what's been validated.</p>
+      </div>
+      <ul class="framework-detail-list">
+        <li><strong>Protocol Development</strong><span>Standardized testing protocols designed for each innovation category, ensuring consistent evaluation across all network sites.</span></li>
+        <li><strong>Multi-Site Validation</strong><span>Technologies are tested across multiple clinics, geographies, and operator skill levels to ensure real-world replicability.</span></li>
+        <li><strong>Operational Assessment</strong><span>Beyond efficacy — we evaluate workflow integration, training requirements, maintenance burden, and total cost of ownership.</span></li>
+        <li><strong>Impact Measurement</strong><span>Patient outcomes, cost metrics, and accessibility improvements are tracked and published transparently.</span></li>
+      </ul>
+    </div>
+  </div></section>
+
+  <section class="section section-navy"><div class="container">
+    <div class="section-label">Decentralized Architecture</div>
+    <div class="section-title">Built for Global Reach</div>
+    <div class="section-subtitle">Our validation network spans jurisdictions, enabling us to test where conditions are optimal and validate where the need is greatest.</div>
+    <div class="model-features">
+      <div class="model-feature"><h4>No Single Headquarters</h4><p>Talent and partners distributed globally. Research conducted where regulatory and operational conditions are most favorable.</p></div>
+      <div class="model-feature"><h4>Multi-Jurisdiction Collaboration</h4><p>Partnerships with clinics across regions enable diverse patient populations and regulatory environments in every study.</p></div>
+      <div class="model-feature"><h4>Flexible Incorporation</h4><p>Strategic legal structures that leverage international advantages for research, funding, and operations.</p></div>
+      <div class="model-feature"><h4>Optimal Pilot Placement</h4><p>Every pilot and research project is placed where conditions maximize learning, efficiency, and real-world relevance.</p></div>
+    </div>
+  </div></section>
+
+  <section class="cta-section"><div class="container">
+    <h2>Have a technology<br><em>ready for validation?</em></h2>
+    <p>Our framework is designed to give innovators a clear path from prototype to clinical implementation.</p>
+    <a class="btn-purple" onclick="openContact()">Submit for Evaluation</a>
+  </div></section>
+</div>
+
+<!-- ==================== AREAS OF INNOVATION ==================== -->
+<div class="page" id="page-innovation">
+  <section class="about-hero"><div class="container">
+    <div class="section-label">Areas of Innovation</div>
+    <h1>Four Verticals<br>of Advancement</h1>
+    <p>Organized into four distinct categories, our research and validation efforts cover the full spectrum of reproductive health innovation — from digital tools to biological breakthroughs.</p>
+  </div></section>
+
+  <section class="section section-white"><div class="container">
+    <div class="innovation-grid">
+      <div class="innovation-card">
+        <div class="innovation-icon">&#128187;</div>
+        <h3>Software</h3>
+        <p>Technologies focused on digital or AI-driven improvements in reproductive health workflows. These tools enhance clinical decision-making, automate assessment processes, and bring data-driven precision to every stage of treatment.</p>
+        <div class="innovation-examples"><strong>Examples:</strong> Embryo assessment algorithms, automated follicle counting, clinical decision support tools, patient management platforms, predictive analytics for treatment outcomes.</div>
+      </div>
+      <div class="innovation-card">
+        <div class="innovation-icon">&#9881;&#65039;</div>
+        <h3>Hardware</h3>
+        <p>Tools and devices that improve precision, automation, or consistency in lab and clinical environments. From robotics to microfluidics, these innovations address the physical infrastructure of reproductive medicine.</p>
+        <div class="innovation-examples"><strong>Examples:</strong> Robotics for lab procedures, automated lab platforms, microfluidic systems, advanced imaging devices, cryostorage systems, environmental monitoring tools.</div>
+      </div>
+      <div class="innovation-card">
+        <div class="innovation-icon">&#128260;</div>
+        <h3>Process Innovation</h3>
+        <p>Re-engineering workflows to improve efficiency, reduce cost, or shorten time-to-treatment. These innovations focus on how care is delivered, not just what tools are used — optimizing the full patient journey.</p>
+        <div class="innovation-examples"><strong>Examples:</strong> Optimized clinical routing, lab workflow redesign, best-practice protocol integration, patient flow optimization, quality management systems.</div>
+      </div>
+      <div class="innovation-card">
+        <div class="innovation-icon">&#129516;</div>
+        <h3>Biotech</h3>
+        <p>Products requiring clinical research to validate outcomes, biomarkers, or biological mechanisms. These innovations push the boundaries of what's scientifically possible in reproductive health.</p>
+        <div class="innovation-examples"><strong>Examples:</strong> Culture media, supplements, genetic testing (PGT), novel culture systems, biomarker assays, hormonal therapies, gamete assessment technologies.</div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="section section-off"><div class="container">
+    <div class="section-label">Our Approach</div>
+    <div class="section-title">How We Assess Each Vertical</div>
+    <div class="section-subtitle">Every innovation — regardless of category — is run through our four-pillar validation framework.</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 56px; align-items: start;">
+      <div>
+        <p style="color:var(--gray-400); line-height:1.9; font-weight:300; font-size:0.95rem; margin-bottom: 20px;">Each vertical presents unique validation challenges. Software may require large datasets and diverse clinical environments to test AI reliability. Hardware demands hands-on testing across different operator skill levels. Process innovations need before-and-after metrics across multiple sites. Biotech requires rigorous clinical trial design.</p>
+        <p style="color:var(--gray-400); line-height:1.9; font-weight:300; font-size:0.95rem;">Our decentralized network of partner clinics ensures that every innovation category can be tested in the conditions that matter most — real-world clinical practice with real patients and real operators.</p>
+      </div>
+      <div>
+        <div class="framework-grid" style="grid-template-columns: 1fr 1fr; margin-top: 0;">
+          <div class="pillar-card"><div class="pillar-num">01</div><h3>Replicability</h3><p>Consistent results across settings and operators.</p></div>
+          <div class="pillar-card"><div class="pillar-num">02</div><h3>Scalability</h3><p>Works at the scale clinics actually need.</p></div>
+          <div class="pillar-card"><div class="pillar-num">03</div><h3>Sustainability</h3><p>Economically and operationally viable long-term.</p></div>
+          <div class="pillar-card"><div class="pillar-num">04</div><h3>Patient Value</h3><p>Measurably improves outcomes or access.</p></div>
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="cta-section"><div class="container">
+    <h2>Building something <em>innovative?</em></h2>
+    <p>Whether it's software, hardware, a new process, or a biotech breakthrough — we want to hear from you.</p>
+    <a class="btn-purple" onclick="openContact()">Get in Touch</a>
   </div></section>
 </div>
 
@@ -481,12 +656,12 @@ footer { background: var(--white); border-top: 1px solid var(--gray-100); paddin
     <div class="footer-logo-wrap"><svg><use href="#rhri-logo"/></svg><span>RHRI</span></div>
     <p>Reproductive Health Research Institute. Enabling innovation. Validating impact.</p>
   </div>
-  <div class="footer-col"><h4>Institute</h4><a onclick="showPage('about')">About Us</a><a onclick="showPage('home');setTimeout(()=>document.getElementById('framework').scrollIntoView({behavior:'smooth'}),100)">Framework</a><a onclick="showPage('home');setTimeout(()=>document.getElementById('vision').scrollIntoView({behavior:'smooth'}),100)">Vision</a></div>
+  <div class="footer-col"><h4>Institute</h4><a onclick="showPage('about')">About Us</a><a onclick="showPage('framework')">Framework</a><a onclick="showPage('innovation')">Areas of Innovation</a></div>
   <div class="footer-col"><h4>For Partners</h4><a onclick="openContact()">Innovators</a><a onclick="openContact()">Clinics</a><a onclick="openContact()">Funders</a></div>
   <div class="footer-col"><h4>Connect</h4><a href="mailto:dm@rhri.bio">dm@rhri.bio</a><a>LinkedIn</a><a>Newsletter</a></div>
-</div><div class="footer-bottom"><p>&copy; 2026 RHRI — Reproductive Health Research Institute</p><p>Enabling innovation. Validating impact.</p></div></footer>
+</div><div class="footer-bottom"><p>&copy; 2026 Reproductive Health Research Institute</p><p>Enabling innovation. Validating impact.</p></div></footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 function showPage(p) {
   document.querySelectorAll('.page').forEach(function(e) { e.classList.remove('active'); });
   document.getElementById('page-' + p).classList.add('active');
@@ -551,7 +726,12 @@ var obs = new IntersectionObserver(function(entries) {
   });
 }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-document.querySelectorAll('.pillar-card,.audience-card,.strat-card,.problem-item,.timeline-item,.value-item,.team-card,.about-block').forEach(function(el) {
+document.querySelectorAll('.pillar-card,.audience-card,.strat-card,.timeline-item,.value-item,.team-card,.about-block,.innovation-card,.model-feature,.framework-detail-list li').forEach(function(el) {
   el.style.opacity = '0';
   el.style.transform = 'translateY(20px)';
-  el.style.transition = 'opacity
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
