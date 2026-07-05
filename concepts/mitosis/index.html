@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RHRI — Mitosis</title>
+<meta name="description" content="RHRI — Reproductive Health Research Institute. Rigorous science, real-world impact. We validate reproductive-health technology in real clinics, before it reaches patients.">
+<meta name="theme-color" content="#020B0D">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23041114'/><circle cx='32' cy='32' r='22' fill='none' stroke='%232BF5C9' stroke-width='2.5'/><line x1='15' y1='32' x2='49' y2='32' stroke='%232BF5C9' stroke-width='2'/><text x='32' y='28' font-family='Arial,sans-serif' font-size='12' font-weight='700' fill='%23EAF7F3' text-anchor='middle'>RH</text><text x='32' y='47' font-family='Arial,sans-serif' font-size='12' font-weight='700' fill='%23EAF7F3' text-anchor='middle'>RI</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#020B0D;
+    --bg2:#041114;
+    --teal:#2BF5C9;
+    --deep:#0A5F5F;
+    --coral:#FF6B57;
+    --ink:#EAF7F3;
+    --mut:#7FA39C;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{background:var(--bg)}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:rgba(43,245,201,.25)}
+
+  /* scroll track — gives the page its 600vh of runway */
+  .track{height:600vh}
+
+  canvas#scene{
+    position:fixed;inset:0;z-index:1;
+    width:100vw;height:100vh;display:block;
+    background:radial-gradient(120% 90% at 50% 42%, var(--bg2) 0%, var(--bg) 72%);
+  }
+
+  /* fixed text layer */
+  .stage{position:fixed;inset:0;z-index:2;pointer-events:none}
+  .act{position:absolute;opacity:0;will-change:opacity,translate}
+  @media (prefers-reduced-motion: reduce){
+    .act{transition:opacity .4s ease}
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;font-weight:500;
+    letter-spacing:.34em;text-transform:uppercase;
+    color:var(--teal);
+    margin-bottom:18px;
+  }
+  .line{
+    font-family:'Instrument Serif',Georgia,serif;
+    font-style:italic;font-weight:400;
+    font-size:clamp(34px,5.2vw,72px);
+    line-height:1.06;letter-spacing:-.01em;
+    text-wrap:balance;
+  }
+  .sub{
+    color:var(--mut);
+    font-size:clamp(14px,1.25vw,17px);
+    line-height:1.65;
+    margin-top:16px;
+    max-width:46ch;
+  }
+
+  .act-0{left:50%;translate:-50% 0;bottom:6vh;text-align:center;width:min(92vw,900px)}
+  .act-0 .sub{margin-left:auto;margin-right:auto}
+  .act-1{left:6vw;top:50%;margin-top:-14vh;max-width:520px}
+  .act-2{right:6vw;top:50%;margin-top:-14vh;max-width:560px;text-align:right}
+  .act-2 .sub{margin-left:auto}
+  .act-3{left:6vw;top:9vh;max-width:420px}
+  .act-3 .line{font-size:clamp(26px,3.3vw,46px)}
+  .act-4{left:50%;translate:-50% 0;bottom:8vh;text-align:center;max-width:90vw}
+  .act-4 .line{font-size:clamp(24px,3vw,42px)}
+  .act-5{left:50%;top:54%;translate:-50% 0;text-align:center;width:min(92vw,820px)}
+
+  /* scroll cue */
+  .cue{
+    margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:10px;
+    font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.42em;color:var(--mut);
+  }
+  .cue i{
+    width:1px;height:42px;
+    background:linear-gradient(var(--teal),transparent);
+    animation:cue 2.3s ease-in-out infinite;
+  }
+  @keyframes cue{0%,100%{opacity:.15}50%{opacity:1}}
+  @media (prefers-reduced-motion: reduce){.cue i{animation:none;opacity:.6}}
+
+  /* pillar labels (act 3) */
+  #pillars{position:absolute;inset:0;opacity:0;pointer-events:none}
+  .pillar{
+    position:absolute;left:0;top:0;
+    translate:-50% -50%;
+    background:none;border:0;cursor:pointer;
+    color:var(--ink);
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;font-weight:500;letter-spacing:.26em;
+    padding:8px 10px;white-space:nowrap;
+  }
+  .pillar.coral{color:var(--coral)}
+  .pillar .reveal{
+    position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    width:236px;white-space:normal;text-align:left;
+    font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:400;
+    letter-spacing:0;text-transform:none;line-height:1.55;color:var(--mut);
+    background:rgba(2,11,13,.88);
+    border:1px solid rgba(43,245,201,.2);
+    border-radius:8px;padding:10px 13px;
+    opacity:0;transition:opacity .25s ease;pointer-events:none;
+  }
+  .pillar.coral .reveal{border-color:rgba(255,107,87,.3)}
+  .pillar:hover .reveal,
+  .pillar:focus-visible .reveal,
+  .pillar.open .reveal{opacity:1}
+  .pillar.up .reveal{top:auto;bottom:calc(100% + 8px)}
+  .pillar:nth-of-type(2) .reveal{left:auto;right:-4px;transform:none}
+  .pillar:nth-of-type(4) .reveal{left:-4px;right:auto;transform:none}
+
+  /* network corner labels (act 4) */
+  .corner{
+    position:absolute;opacity:0;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:.16em;line-height:1.7;
+    color:var(--mut);max-width:32ch;
+    will-change:opacity,translate;
+  }
+  .corner b{color:var(--ink);font-weight:500;letter-spacing:.24em}
+  .corner.heart b{color:var(--coral)}
+  .c-tl{left:5vw;top:7vh}
+  .c-tr{right:5vw;top:7vh;text-align:right}
+  .c-bl{left:5vw;bottom:7vh}
+  .c-br{right:5vw;bottom:7vh;text-align:right}
+
+  /* CTA (act 5) */
+  .cta{
+    display:inline-block;margin-top:34px;
+    padding:17px 38px;border-radius:999px;
+    background:var(--coral);color:#1B0703;
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;letter-spacing:.02em;
+    text-decoration:none;
+    box-shadow:0 0 38px rgba(255,107,87,.35), inset 0 0 14px rgba(255,255,255,.18);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .cta:hover{transform:translateY(-2px);box-shadow:0 0 64px rgba(255,107,87,.55), inset 0 0 14px rgba(255,255,255,.25)}
+  @media (prefers-reduced-motion: reduce){.cta{transition:none}.cta:hover{transform:none}}
+  .foot{
+    margin-top:38px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;letter-spacing:.14em;color:var(--mut);line-height:2.1;
+  }
+  .foot a{color:var(--mut);text-decoration:none;border-bottom:1px solid rgba(127,163,156,.4)}
+  .foot a:hover{color:var(--teal);border-color:var(--teal)}
+
+  /* skip link */
+  .skip{
+    position:fixed;left:16px;top:16px;z-index:50;
+    background:var(--teal);color:#04231C;
+    padding:10px 18px;border-radius:8px;
+    font-weight:600;font-size:14px;text-decoration:none;
+    transform:translateY(-220%);transition:transform .2s ease;
+  }
+  .skip:focus{transform:none}
+
+  :focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:4px}
+  .cta:focus-visible{outline-color:var(--coral)}
+
+  @media (max-width:767px){
+    .act-1,.act-2{max-width:86vw}
+    .act-2{text-align:left;right:auto;left:6vw}
+    .act-2 .sub{margin-left:0}
+    .act-3{top:5vh;max-width:78vw}
+    .act-3 .line{font-size:24px}
+    .pillar{font-size:10px;letter-spacing:.2em;padding:6px 8px}
+    .pillar .reveal{width:200px;font-size:12px}
+    .corner{font-size:10px;max-width:24ch}
+    .cue i{height:34px}
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" id="skipLink" href="#cta">Skip to contact</a>
+
+<!-- scroll runway -->
+<div class="track" aria-hidden="true"></div>
+
+<!-- the organism -->
+<canvas id="scene" aria-hidden="true"></canvas>
+
+<!-- fixed narrative layer -->
+<div class="stage" id="stage">
+
+  <section class="act act-0" aria-label="Introduction">
+    <p class="eyebrow">Reproductive Health Research Institute</p>
+    <h1 class="line">Rigorous Science. Real-World&nbsp;Impact.</h1>
+    <p class="sub">We validate reproductive-health technology in real clinics — before it reaches patients.</p>
+    <div class="cue" aria-hidden="true"><span>SCROLL</span><i></i></div>
+  </section>
+
+  <section class="act act-1" aria-label="The problem">
+    <p class="eyebrow">The Problem</p>
+    <h2 class="line">The path from lab to clinic is broken.</h2>
+    <p class="sub">Marketing outruns evidence. Clinics carry the risk.</p>
+  </section>
+
+  <section class="act act-2" aria-label="What we do">
+    <p class="eyebrow">What We Do</p>
+    <h2 class="line">So we test it where it matters: real clinics, real conditions.</h2>
+  </section>
+
+  <section class="act act-3" aria-label="The four pillars">
+    <p class="eyebrow">Four Pillars</p>
+    <h2 class="line">Most evaluations test the first. We test all four.</h2>
+  </section>
+
+  <section class="act act-4" aria-label="The network">
+    <p class="eyebrow">The Network</p>
+    <h2 class="line">The standard spreads, clinic by clinic.</h2>
+  </section>
+
+  <section class="act act-5" aria-label="Get involved">
+    <p class="eyebrow">Next</p>
+    <h2 class="line">This is the foundation. Now we build.</h2>
+    <a class="cta" id="cta" href="mailto:dm@rhri.bio">Get involved → dm@rhri.bio</a>
+    <p class="foot">
+      Daniel Madero · Cynthia Hudson · Felicitas Azpiroz — © 2026 RHRI<br>
+      <a id="allConcepts" href="../index.html">← all concepts</a>
+    </p>
+  </section>
+
+  <!-- pillar labels, tethered to the four cells on the canvas -->
+  <div id="pillars">
+    <button class="pillar" type="button">REPLICABILITY
+      <span class="reveal">Do results hold across operators, labs, geographies?</span>
+    </button>
+    <button class="pillar" type="button">SCALABILITY
+      <span class="reveal">Does it work at clinic volume, across real skill levels?</span>
+    </button>
+    <button class="pillar coral up" type="button">PATIENT VALUE
+      <span class="reveal">Better outcomes, lower cost, wider access. The only measure that counts.</span>
+    </button>
+    <button class="pillar" type="button">SUSTAINABILITY
+      <span class="reveal">Do the economics hold as volume grows?</span>
+    </button>
+  </div>
+
+  <!-- network audience labels -->
+  <p class="corner c-tl"><b>INNOVATORS</b><br>— validation clinics trust</p>
+  <p class="corner c-tr"><b>CLINICS</b><br>— proven tech, less risk</p>
+  <p class="corner c-bl heart"><b>PATIENTS</b><br>— the reason the standard exists</p>
+  <p class="corner c-br"><b>FUNDERS</b><br>— signal, separated from noise</p>
+
+</div>
+
+<script>
+(() => {
+'use strict';
+
+/* ============================================================
+   MITOSIS — the institute as a living organism.
+   One cell divides across six scroll-driven acts.
+   ============================================================ */
+
+const TAU = Math.PI * 2;
+const canvas = document.getElementById('scene');
+const ctx = canvas.getContext('2d');
+
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mobile  = window.matchMedia('(max-width: 767px)').matches;
+const DPR = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2);
+const WOB = reduced ? 0 : 1;          // membrane wobble amplitude switch
+
+const TEAL  = '43,245,201';
+const CORAL = '255,107,87';
+const DEEP  = '10,95,95';
+
+/* layout constants (fractions of S = min(W,H)) */
+const R0 = 0.26;   // hero cell radius
+const R2 = 0.18;   // after first division
+const R4 = 0.10;   // diamond cells
+
+let W = 0, H = 0, S = 0, CX = 0, CY = 0, baseY = 0;
+
+/* ---------- helpers ---------- */
+const clamp  = (v, a, b) => v < a ? a : (v > b ? b : v);
+const lerp   = (a, b, t) => a + (b - a) * t;
+const smooth = t => t * t * (3 - 2 * t);
+const seg    = (v, a, b) => smooth(clamp((v - a) / (b - a), 0, 1));
+
+function mixCol(t) { // teal -> coral
+  const r = Math.round(lerp(43, 255, t));
+  const g = Math.round(lerp(245, 107, t));
+  const b = Math.round(lerp(201, 87, t));
+  return r + ',' + g + ',' + b;
+}
+
+/* deterministic rng for stable layouts */
+let rngState = 1234567;
+function rand() {
+  rngState = (rngState * 1664525 + 1013904223) >>> 0;
+  return rngState / 4294967296;
+}
+
+/* ---------- particle pools ---------- */
+
+/* organelles drifting inside the macro cells */
+const N_ORG = mobile ? 12 : 26;
+const organelles = [];
+for (let i = 0; i < N_ORG; i++) {
+  organelles.push({
+    a: rand() * TAU,
+    r: 0.15 + 0.75 * rand(),
+    sp: (0.08 + 0.3 * rand()) * (rand() < 0.5 ? -1 : 1),
+    ph: rand() * TAU,
+    s: 1.2 + 2.2 * rand()
+  });
+}
+
+/* small cells of the network (acts 4-5) */
+const N_CELL = mobile ? 18 : 36;
+const cellsArr = [];
+for (let i = 0; i < N_CELL; i++) {
+  cellsArr.push({
+    sx: (rand() - 0.5) * 0.94,            // scatter position (fraction of W/H)
+    sy: (rand() - 0.5) * 0.84,
+    parent: i % 4,                        // which diamond cell it buds from
+    orbR: 0.13 + 0.24 * rand(),           // act-5 orbit
+    orbA: rand() * TAU,
+    orbSp: (0.1 + 0.18 * rand()) * (rand() < 0.5 ? -1 : 1),
+    ph: rand() * TAU,
+    dsp: 0.4 + 0.8 * rand(),
+    size: 0.013 + 0.016 * rand()
+  });
+}
+const cpos = [];
+for (let i = 0; i < N_CELL; i++) cpos.push({ x: 0, y: 0, a: 0, r: 0 });
+
+/* network edges between nearby scatter positions */
+let pairs = [];
+function buildPairs() {
+  pairs = [];
+  const TH = S * 0.24;
+  for (let i = 0; i < N_CELL; i++) {
+    for (let j = i + 1; j < N_CELL; j++) {
+      const dx = (cellsArr[i].sx - cellsArr[j].sx) * W * 0.84;
+      const dy = (cellsArr[i].sy - cellsArr[j].sy) * H * 0.74;
+      const d = Math.hypot(dx, dy);
+      if (d < TH && d > 10) pairs.push([i, j, d / TH]);
+    }
+  }
+}
+
+/* teal pulses travelling along edges */
+const N_PULSE = mobile ? 2 : 4;
+const pulses = [];
+for (let i = 0; i < N_PULSE; i++) {
+  pulses.push({ k: i, t: Math.random(), sp: 0.35 + Math.random() * 0.4 });
+}
+
+/* ---------- scroll / time / parallax state ---------- */
+let targetP = 0, scrollP = 0;
+let T = reduced ? 8 : 0, DT = 0.016, last = 0, rafId = 0, running = false;
+let mxT = 0.5, myT = 0.5, parX = 0, parY = 0;
+
+function readScroll() {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  targetP = max > 0 ? clamp(window.scrollY / max, 0, 1) : 0;
+}
+
+/* ============================================================
+   Scene model — where every cell is, given act progress a (0..5)
+   ============================================================ */
+function computeScene(a) {
+  const s1 = seg(a, 1.80, 2.45);                       // 1 -> 2
+  const s2 = seg(a, 2.70, 3.30);                       // 2 -> 4
+  const fade4 = 1 - seg(a, 3.85, 4.30);                // macro cells dissolve
+  const prob = seg(a, 0.75, 1.05) * (1 - seg(a, 1.65, 1.95)); // act-1 distress
+  const breath = 1 + 0.018 * WOB * Math.sin(T * 0.9);
+
+  const bx = CX + parX;
+  const by = baseY + parY;
+
+  /* diamond targets: 0 top, 1 right, 2 bottom, 3 left */
+  const dia = [
+    { x: bx,            y: by - 0.24 * S },
+    { x: bx + 0.30 * S, y: by + 0.015 * S },
+    { x: bx,            y: by + 0.26 * S },
+    { x: bx - 0.30 * S, y: by + 0.015 * S }
+  ];
+
+  const blobs = [];
+  const necks = [];
+
+  if (s1 <= 0.001) {
+    blobs.push({ x: bx, y: by, r: R0 * S * breath, a: 1, coral: 0, seed: 0, prob });
+  } else {
+    const Lx = lerp(bx, bx - 0.20 * S, s1);
+    const Rx = lerp(bx, bx + 0.20 * S, s1);
+    if (s2 <= 0.001) {
+      const r2 = lerp(R0, R2, s1) * S * breath;
+      const a2 = lerp(0.6, 1, s1) * fade4;
+      blobs.push({ x: Lx, y: by, r: r2, a: a2, coral: 0, seed: 1, prob: 0 });
+      blobs.push({ x: Rx, y: by, r: r2, a: a2, coral: 0, seed: 2, prob: 0 });
+      if (s1 < 0.999) {
+        necks.push({ x1: Lx, y1: by, x2: Rx, y2: by, w: lerp(r2 * 1.5, 0, s1), a: 1 - s1 });
+      }
+    } else {
+      const r4 = lerp(R2, R4, s2) * S * breath;
+      const a4 = lerp(0.6, 1, s2) * fade4;
+      const ch = [];
+      const map = [[3, 0, { x: Lx, y: by }], [1, 2, { x: Rx, y: by }]];
+      for (const [c1, c2, P] of map) {
+        for (const k of [c1, c2]) {
+          ch[k] = { x: lerp(P.x, dia[k].x, s2), y: lerp(P.y, dia[k].y, s2) };
+        }
+        if (s2 < 0.999) {
+          necks.push({
+            x1: ch[c1].x, y1: ch[c1].y, x2: ch[c2].x, y2: ch[c2].y,
+            w: lerp(r4 * 1.5, 0, s2), a: 1 - s2
+          });
+        }
+      }
+      const coralBlend = seg(a, 3.0, 3.45);   // patient-value cell warms up
+      for (let k = 0; k < 4; k++) {
+        blobs.push({
+          x: ch[k].x, y: ch[k].y, r: r4, a: a4,
+          coral: k === 2 ? coralBlend : 0, seed: 3 + k, prob: 0
+        });
+      }
+    }
+  }
+  return { blobs, necks, dia, s1, s2 };
+}
+
+/* ============================================================
+   Drawing
+   ============================================================ */
+function blobPath(x, y, r, sd, jit) {
+  const PTS = 60;
+  ctx.beginPath();
+  for (let i = 0; i <= PTS; i++) {
+    const ang = (i / PTS) * TAU;
+    let rr = r * (1 + WOB * (
+      0.030 * Math.sin(ang * 5 + T * 1.15 + sd * 2.1) +
+      0.018 * Math.sin(ang * 3 - T * 0.80 + sd * 4.7)
+    ));
+    if (jit > 0) rr += r * jit * 0.028 * Math.sin(ang * 9 + T * 6.2);
+    const px = x + Math.cos(ang) * rr;
+    const py = y + Math.sin(ang) * rr;
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+}
+
+function drawEscapees(b) {
+  for (let k = 0; k < 6; k++) {
+    const ang = k * 1.097 + 0.4;
+    const tt = (T * 0.16 + k * 0.37) % 1;
+    const d = b.r * (1.03 + tt * 1.05);
+    const al = b.prob * (1 - tt) * 0.7;
+    if (al <= 0.02) continue;
+    ctx.beginPath();
+    ctx.arc(b.x + Math.cos(ang) * d, b.y + Math.sin(ang) * d, 2.2, 0, TAU);
+    ctx.fillStyle = 'rgba(' + CORAL + ',' + al.toFixed(3) + ')';
+    ctx.fill();
+  }
+}
+
+function drawBlob(b) {
+  if (b.a <= 0.01 || b.r <= 1) return;
+  const col = mixCol(b.coral || 0);
+  ctx.globalCompositeOperation = 'lighter';
+
+  /* deep ambient halo */
+  let g = ctx.createRadialGradient(b.x, b.y, b.r * 0.1, b.x, b.y, b.r * 2.3);
+  g.addColorStop(0, 'rgba(' + DEEP + ',' + (0.50 * b.a).toFixed(3) + ')');
+  g.addColorStop(0.5, 'rgba(' + DEEP + ',' + (0.16 * b.a).toFixed(3) + ')');
+  g.addColorStop(1, 'rgba(' + DEEP + ',0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(b.x - b.r * 2.3, b.y - b.r * 2.3, b.r * 4.6, b.r * 4.6);
+
+  /* cytoplasm + rim */
+  blobPath(b.x, b.y, b.r, b.seed, b.prob || 0);
+  g = ctx.createRadialGradient(b.x - b.r * 0.2, b.y - b.r * 0.25, b.r * 0.05, b.x, b.y, b.r * 1.02);
+  g.addColorStop(0, 'rgba(' + col + ',' + (0.14 * b.a).toFixed(3) + ')');
+  g.addColorStop(0.7, 'rgba(' + col + ',' + (0.05 * b.a).toFixed(3) + ')');
+  g.addColorStop(1, 'rgba(' + col + ',' + (0.10 * b.a).toFixed(3) + ')');
+  ctx.fillStyle = g;
+  ctx.fill();
+
+  /* membrane: wide soft glow + thin bright line */
+  ctx.lineWidth = Math.max(3, b.r * 0.05);
+  ctx.strokeStyle = 'rgba(' + col + ',' + (0.22 * b.a).toFixed(3) + ')';
+  ctx.stroke();
+  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = 'rgba(' + col + ',' + (0.85 * b.a).toFixed(3) + ')';
+  ctx.stroke();
+
+  /* act-1 coral interference */
+  if (b.prob > 0.01) {
+    for (let k = 0; k < 3; k++) {
+      const fl = Math.pow(0.5 + 0.5 * Math.sin(T * 9 + k * 2.4), 2) * b.prob;
+      if (fl < 0.04) continue;
+      const st = T * 0.5 + k * 2.2;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r * 1.005, st, st + 0.9);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(' + CORAL + ',' + (0.7 * fl).toFixed(3) + ')';
+      ctx.stroke();
+    }
+    drawEscapees(b);
+  }
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+function drawNeck(n) {
+  if (n.w <= 0.5 || n.a <= 0.01) return;
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = n.w;
+  ctx.strokeStyle = 'rgba(' + DEEP + ',' + (0.5 * n.a).toFixed(3) + ')';
+  ctx.beginPath(); ctx.moveTo(n.x1, n.y1); ctx.lineTo(n.x2, n.y2); ctx.stroke();
+  ctx.lineWidth = Math.max(1, n.w * 0.45);
+  ctx.strokeStyle = 'rgba(' + TEAL + ',' + (0.18 * n.a).toFixed(3) + ')';
+  ctx.stroke();
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+/* RH / line / RI — the mark lives inside the hero cell */
+function drawMark(b, al) {
+  if (al <= 0.01) return;
+  const r = b.r;
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.letterSpacing = '0.12em';
+  ctx.font = '600 ' + Math.round(r * 0.40) + 'px "Space Grotesk", sans-serif';
+  ctx.fillStyle = 'rgba(234,247,243,' + (0.92 * al).toFixed(3) + ')';
+  ctx.fillText('RH', b.x, b.y - r * 0.30);
+  ctx.fillText('RI', b.x, b.y + r * 0.34);
+  ctx.strokeStyle = 'rgba(' + TEAL + ',' + (0.8 * al).toFixed(3) + ')';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(b.x - r * 0.55, b.y);
+  ctx.lineTo(b.x + r * 0.55, b.y);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawOrganelles(blobs, a) {
+  const fade = 1 - seg(a, 3.85, 4.25);
+  if (fade <= 0.01 || blobs.length === 0) return;
+  ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < organelles.length; i++) {
+    const o = organelles[i];
+    const b = blobs[i % blobs.length];
+    if (b.a <= 0.02) continue;
+    const ang = o.a + T * o.sp;
+    const rad = b.r * o.r * (0.72 + 0.06 * Math.sin(T * 0.7 + o.ph));
+    const x = b.x + Math.cos(ang) * rad;
+    const y = b.y + Math.sin(ang) * rad * 0.9;
+    const al = fade * b.a * (0.25 + 0.2 * Math.sin(T * 1.3 + o.ph));
+    if (al <= 0.02) continue;
+    ctx.beginPath();
+    ctx.arc(x, y, o.s, 0, TAU);
+    ctx.fillStyle = 'rgba(' + TEAL + ',' + al.toFixed(3) + ')';
+    ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+function drawSmall(x, y, r, al) {
+  if (al <= 0.01) return;
+  ctx.globalCompositeOperation = 'lighter';
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r * 3);
+  g.addColorStop(0, 'rgba(' + TEAL + ',' + (0.50 * al).toFixed(3) + ')');
+  g.addColorStop(0.4, 'rgba(' + TEAL + ',' + (0.12 * al).toFixed(3) + ')');
+  g.addColorStop(1, 'rgba(' + TEAL + ',0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(x - r * 3, y - r * 3, r * 6, r * 6);
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, TAU);
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgba(' + TEAL + ',' + (0.8 * al).toFixed(3) + ')';
+  ctx.stroke();
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+/* acts 4-5: the network and its convergence into orbit */
+function drawNetwork(a, dia) {
+  const ob = seg(a, 4.5, 5.0);
+  const edgeA = seg(a, 4.05, 4.45) * (1 - seg(a, 4.55, 4.92));
+  const hx = CX + parX * 0.5;
+  const hy = CY - 0.08 * H + parY * 0.5;
+  let any = false;
+
+  for (let i = 0; i < N_CELL; i++) {
+    const c = cellsArr[i];
+    const e = seg(a, 3.72 + (i % 7) * 0.045, 4.12 + (i % 7) * 0.045);
+    const P = cpos[i];
+    if (e <= 0.001) { P.a = 0; continue; }
+    any = true;
+    const par = dia[c.parent];
+    const sxp = CX + c.sx * W * 0.84 + WOB * Math.sin(T * c.dsp + c.ph) * 7;
+    const syp = CY + c.sy * H * 0.74 + WOB * Math.cos(T * c.dsp * 0.8 + c.ph) * 7;
+    let x = lerp(par.x, sxp, e);
+    let y = lerp(par.y, syp, e);
+    if (ob > 0) {
+      const ang = c.orbA + T * c.orbSp;
+      x = lerp(x, hx + Math.cos(ang) * c.orbR * S, ob);
+      y = lerp(y, hy + Math.sin(ang) * c.orbR * S * 0.82, ob);
+    }
+    P.x = x; P.y = y; P.a = e;
+    P.r = c.size * S * (0.55 + 0.45 * e);
+  }
+  if (!any) return;
+
+  if (edgeA > 0.01 && pairs.length > 0) {
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineWidth = 1;
+    for (const [i, j, d] of pairs) {
+      const A = cpos[i], B = cpos[j];
+      const al = edgeA * (1 - d) * Math.min(A.a, B.a) * 0.35;
+      if (al <= 0.015) continue;
+      ctx.strokeStyle = 'rgba(' + TEAL + ',' + al.toFixed(3) + ')';
+      ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+    }
+    if (!reduced) {
+      for (const p of pulses) {
+        p.t += p.sp * DT;
+        if (p.t >= 1) { p.t = 0; p.k = Math.floor(Math.random() * pairs.length); }
+        const pr = pairs[p.k % pairs.length];
+        const A = cpos[pr[0]], B = cpos[pr[1]];
+        if (A.a < 0.2 || B.a < 0.2) continue;
+        const x = lerp(A.x, B.x, p.t);
+        const y = lerp(A.y, B.y, p.t);
+        const g = ctx.createRadialGradient(x, y, 0, x, y, 9);
+        g.addColorStop(0, 'rgba(' + TEAL + ',' + (0.9 * edgeA).toFixed(3) + ')');
+        g.addColorStop(1, 'rgba(' + TEAL + ',0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(x - 9, y - 9, 18, 18);
+      }
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  for (let i = 0; i < N_CELL; i++) {
+    const P = cpos[i];
+    if (P.a > 0.01) drawSmall(P.x, P.y, P.r, P.a * 0.9);
+  }
+}
+
+/* act 5: the coral heart-cell everything orbits */
+function drawHeart(a) {
+  const ha = seg(a, 4.5, 4.95);
+  if (ha <= 0.01) return;
+  const hx = CX + parX * 0.5;
+  const hy = CY - 0.08 * H + parY * 0.5;
+  const beat = reduced ? 0.5 : Math.pow(Math.abs(Math.sin(T * 1.5)), 6);
+  const r = 0.085 * S * (1 + 0.10 * beat);
+  drawBlob({ x: hx, y: hy, r, a: ha * (0.85 + 0.15 * beat), coral: 1, seed: 9, prob: 0 });
+  if (!reduced) {
+    const rt = (T * 0.45) % 1;
+    const ra = ha * (1 - rt) * 0.3;
+    if (ra > 0.01) {
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.beginPath();
+      ctx.arc(hx, hy, r * (1 + rt * 2.4), 0, TAU);
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(' + CORAL + ',' + ra.toFixed(3) + ')';
+      ctx.stroke();
+      ctx.globalCompositeOperation = 'source-over';
+    }
+  }
+}
+
+/* ============================================================
+   DOM layers: act text, pillar labels + tethers, corner labels
+   ============================================================ */
+const actEls = Array.from(document.querySelectorAll('.act'));
+const pillarEls = Array.from(document.querySelectorAll('.pillar'));
+const pillarsBox = document.getElementById('pillars');
+const cornerEls = Array.from(document.querySelectorAll('.corner'));
+const tethers = [];
+
+function updateText(a) {
+  for (let i = 0; i < actEls.length; i++) {
+    const fin = i === 0 ? 1 : seg(a, i - 0.22, i + 0.04);
+    const fout = i === 5 ? 0 : seg(a, i + 0.58, i + 0.86);
+    const v = fin * (1 - fout);
+    const el = actEls[i];
+    el.style.opacity = v.toFixed(3);
+    el.style.translate = '0 ' + (((1 - fin) * 28) - (fout * 22)).toFixed(1) + 'px';
+    el.style.pointerEvents = v > 0.5 ? 'auto' : 'none';
+  }
+}
+
+function updatePillars(a, scene) {
+  const vis = seg(a, 3.02, 3.38) * (1 - seg(a, 3.70, 4.00));
+  pillarsBox.style.opacity = vis.toFixed(3);
+  pillarsBox.style.pointerEvents = vis > 0.4 ? 'auto' : 'none';
+  tethers.length = 0;
+  if (vis <= 0.01 || scene.blobs.length !== 4) return 0;
+
+  /* DOM order: top, right, bottom, left -> diamond indices 0..3 */
+  const dirs = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+  const gap = mobile ? 44 : 60;
+  for (let k = 0; k < 4; k++) {
+    const b = scene.blobs[k];
+    let [dx, dy] = dirs[k];
+    if (mobile && dy === 0) { dx = 0; dy = 1; }   // park side labels below on phones
+    const lx = b.x + dx * (b.r + (dx !== 0 ? gap + 74 : 0));
+    const ly = b.y + dy * (b.r + (dy !== 0 ? gap * 0.78 + 8 : 0));
+    const el = pillarEls[k];
+    el.style.left = lx.toFixed(1) + 'px';
+    el.style.top = ly.toFixed(1) + 'px';
+    tethers.push({
+      x1: b.x + dx * b.r, y1: b.y + dy * b.r,
+      x2: lx - dx * 74, y2: ly - dy * 16, a: vis
+    });
+  }
+  return vis;
+}
+
+function drawTethers(vis) {
+  if (vis <= 0.01) return;
+  ctx.lineWidth = 1;
+  for (const tt of tethers) {
+    ctx.strokeStyle = 'rgba(' + TEAL + ',' + (0.4 * vis).toFixed(3) + ')';
+    ctx.beginPath(); ctx.moveTo(tt.x1, tt.y1); ctx.lineTo(tt.x2, tt.y2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(tt.x1, tt.y1, 2, 0, TAU);
+    ctx.fillStyle = 'rgba(' + TEAL + ',' + (0.7 * vis).toFixed(3) + ')';
+    ctx.fill();
+  }
+}
+
+function updateCorners(a) {
+  for (let i = 0; i < cornerEls.length; i++) {
+    const v = seg(a, 4.08 + i * 0.05, 4.42 + i * 0.05) * (1 - seg(a, 4.72, 4.98));
+    cornerEls[i].style.opacity = v.toFixed(3);
+    cornerEls[i].style.translate = '0 ' + ((1 - v) * 12).toFixed(1) + 'px';
+  }
+}
+
+/* ============================================================
+   Frame
+   ============================================================ */
+function frame() {
+  const a = clamp(scrollP * 5, 0, 5);
+  const scene = computeScene(a);
+
+  ctx.clearRect(0, 0, W, H);
+  for (const n of scene.necks) drawNeck(n);
+  for (const b of scene.blobs) drawBlob(b);
+  if (scene.s1 <= 0.001 && scene.blobs.length === 1) {
+    drawMark(scene.blobs[0], 1 - seg(a, 0.5, 0.9));
+  }
+  drawOrganelles(scene.blobs, a);
+  drawNetwork(a, scene.dia);
+  drawHeart(a);
+
+  const pv = updatePillars(a, scene);
+  drawTethers(pv);
+  updateText(a);
+  updateCorners(a);
+}
+
+/* ---------- animation loop ---------- */
+function tick(now) {
+  DT = clamp((now - last) / 1000, 0.001, 0.05);
+  last = now;
+  T += DT;
+  scrollP += (targetP - scrollP) * 0.085;
+  if (Math.abs(targetP - scrollP) < 0.0004) scrollP = targetP;
+  if (!mobile) {
+    parX += ((mxT - 0.5) * 16 - parX) * 0.05;
+    parY += ((myT - 0.5) * 12 - parY) * 0.05;
+  }
+  frame();
+  rafId = requestAnimationFrame(tick);
+}
+function start() {
+  if (running || reduced) return;
+  running = true;
+  last = performance.now();
+  rafId = requestAnimationFrame(tick);
+}
+function stop() {
+  if (!running) return;
+  running = false;
+  cancelAnimationFrame(rafId);
+}
+function staticRender() {  // reduced-motion: one frame per scroll position
+  scrollP = targetP;
+  frame();
+}
+
+/* ---------- events ---------- */
+function resize() {
+  W = window.innerWidth;
+  H = window.innerHeight;
+  S = Math.min(W, H);
+  CX = W / 2;
+  CY = H / 2;
+  baseY = CY + (mobile ? H * 0.02 : -H * 0.04);
+  canvas.width = Math.round(W * DPR);
+  canvas.height = Math.round(H * DPR);
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  buildPairs();
+  readScroll();
+  if (reduced) staticRender();
+}
+window.addEventListener('resize', resize);
+
+window.addEventListener('scroll', () => {
+  readScroll();
+  if (reduced) requestAnimationFrame(staticRender);
+}, { passive: true });
+
+if (!mobile && !reduced) {
+  window.addEventListener('pointermove', e => {
+    mxT = e.clientX / Math.max(1, W);
+    myT = e.clientY / Math.max(1, H);
+  }, { passive: true });
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stop(); else start();
+});
+
+/* keyboard access: focusing an element scrolls its act into view */
+function scrollToA(av) {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  window.scrollTo({ top: max * av / 5, behavior: reduced ? 'auto' : 'smooth' });
+}
+document.getElementById('skipLink').addEventListener('click', e => {
+  e.preventDefault();
+  scrollToA(5);
+  document.getElementById('cta').focus({ preventScroll: true });
+});
+pillarEls.forEach(el => {
+  el.addEventListener('focus', () => {
+    const a = scrollP * 5;
+    if (a < 3.05 || a > 3.65) scrollToA(3.35);
+  });
+  el.addEventListener('click', () => {   // touch: tap toggles the reveal
+    pillarEls.forEach(p => { if (p !== el) p.classList.remove('open'); });
+    el.classList.toggle('open');
+  });
+});
+['cta', 'allConcepts'].forEach(id => {
+  document.getElementById(id).addEventListener('focus', () => {
+    if (scrollP * 5 < 4.6) scrollToA(5);
+  });
+});
+
+/* ---------- boot ---------- */
+resize();
+readScroll();
+if (reduced) {
+  staticRender();
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => staticRender());
+  }
+} else {
+  start();
+}
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RHRI — Redesign concepts · Round 2</title>
+<meta name="description" content="Website concepts for the Reproductive Health Research Institute. Round 2: Mitosis, Specimen, Deepfield. Round 1 archive: Dossier, Signal, Bloom.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23020B0D'/%3E%3Ccircle cx='50' cy='50' r='42' fill='none' stroke='%232BF5C9' stroke-width='2.5'/%3E%3Cline x1='30' y1='50' x2='70' y2='50' stroke='%232BF5C9' stroke-width='2'/%3E%3Ctext x='50' y='44' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='20' fill='%23EAF7F3'%3ERH%3C/text%3E%3Ctext x='50' y='70' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='20' fill='%232BF5C9'%3ERI%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050f11; --bg-2:#0a1a1d; --tx:#eaf1ef; --tx-2:#9db3af; --tx-3:#6f8581;
+  --teal:#2BF5C9; --coral:#FF6B57; --acid:#D6FF3D; --line:rgba(255,255,255,.1);
+  --disp:'Space Grotesk',sans-serif; --body:'Inter',sans-serif; --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--body);background:var(--bg);color:var(--tx);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:4px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.wrap{max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px)}
+header{padding:64px 0 24px;text-align:center}
+header .badge{display:inline-flex;align-items:center;gap:9px;color:var(--teal);font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;border:1px solid var(--line);padding:7px 16px;border-radius:99px}
+header .badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--coral)}
+header h1{font-family:var(--disp);font-weight:600;font-size:clamp(32px,5.5vw,56px);letter-spacing:-.02em;line-height:1.04;margin:24px 0 0}
+header h1 em{font-style:normal;color:var(--teal)}
+header p{color:var(--tx-2);max-width:64ch;margin:18px auto 0;font-size:17px}
+header .meta{color:var(--tx-3);font-size:14px;margin-top:14px}
+header .meta b{color:var(--coral);font-weight:500}
+
+.roundhead{display:flex;align-items:baseline;gap:16px;padding:40px 0 6px;border-bottom:1px solid var(--line)}
+.roundhead h2{font-family:var(--disp);font-size:22px;font-weight:600;letter-spacing:-.01em}
+.roundhead .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal)}
+.roundhead .tag.dim{color:var(--tx-3)}
+.roundhead p{color:var(--tx-3);font-size:13.5px;margin-left:auto}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;padding:26px 0 8px}
+.card{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--bg-2);transition:.3s}
+.card:hover{transform:translateY(-6px);border-color:rgba(43,245,201,.4);box-shadow:0 26px 60px rgba(0,0,0,.4)}
+.swatch{height:150px;position:relative;display:flex;align-items:flex-end;padding:16px;overflow:hidden}
+.swatch .n{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;z-index:2}
+
+/* round-2 swatches */
+.sw-mitosis{background:radial-gradient(circle at 50% 42%,#06241f,#020B0D)}
+.sw-mitosis .n{color:#2BF5C9}
+.sw-mitosis::before{content:"";position:absolute;top:18px;left:50%;transform:translateX(-62%);width:64px;height:64px;border-radius:50%;border:2px solid #2BF5C9;box-shadow:0 0 24px rgba(43,245,201,.45),inset 0 0 18px rgba(43,245,201,.25)}
+.sw-mitosis::after{content:"";position:absolute;top:30px;left:50%;transform:translateX(12%);width:42px;height:42px;border-radius:50%;border:2px solid #FF6B57;box-shadow:0 0 20px rgba(255,107,87,.5)}
+.sw-specimen{background:#EDEAE2}
+.sw-specimen .n{color:#0C0C0D}
+.sw-specimen::before{content:"VALIDATED";position:absolute;top:26px;right:-14px;transform:rotate(-8deg);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:24px;letter-spacing:.06em;color:#0C0C0D;background:#D6FF3D;padding:4px 18px}
+.sw-specimen::after{content:"";position:absolute;left:16px;top:18px;width:90px;height:8px;background:repeating-linear-gradient(90deg,#0C0C0D 0 3px,transparent 3px 6px)}
+.sw-deepfield{background:radial-gradient(circle at 60% 30%,#0a2e33,#02090E)}
+.sw-deepfield .n{color:#19E3C2}
+.sw-deepfield .dots i{position:absolute;border-radius:50%;background:#19E3C2;box-shadow:0 0 12px #19E3C2}
+.sw-deepfield .dots i:nth-child(1){width:8px;height:8px;top:34px;left:60px}
+.sw-deepfield .dots i:nth-child(2){width:5px;height:5px;top:70px;left:140px;opacity:.7}
+.sw-deepfield .dots i:nth-child(3){width:3px;height:3px;top:48px;left:210px;opacity:.45}
+.sw-deepfield .dots i:nth-child(4){width:10px;height:10px;top:88px;left:36px;background:#FF6A55;box-shadow:0 0 14px #FF6A55}
+.sw-deepfield::before{content:"";position:absolute;inset:14px;border:1px solid rgba(110,140,160,.35);border-radius:6px;mask:linear-gradient(#000 0 0) top left/26px 26px no-repeat,linear-gradient(#000 0 0) top right/26px 26px no-repeat,linear-gradient(#000 0 0) bottom left/26px 26px no-repeat,linear-gradient(#000 0 0) bottom right/26px 26px no-repeat;-webkit-mask:linear-gradient(#000 0 0) top left/26px 26px no-repeat,linear-gradient(#000 0 0) top right/26px 26px no-repeat,linear-gradient(#000 0 0) bottom left/26px 26px no-repeat,linear-gradient(#000 0 0) bottom right/26px 26px no-repeat}
+
+/* round-1 swatches */
+.sw-dossier{background:#F7F4ED}
+.sw-dossier .n{color:#0A5F5F}
+.sw-dossier::before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 92%,rgba(10,95,95,.2) 92%),linear-gradient(90deg,transparent 92%,rgba(10,95,95,.12) 92%);background-size:30px 30px}
+.sw-signal{background:radial-gradient(circle at 30% 30%,#0d2429,#06120f)}
+.sw-signal .n{color:#14B8A6}
+.sw-signal .dots i{position:absolute;width:6px;height:6px;border-radius:50%;background:#14B8A6;box-shadow:0 0 10px #14B8A6}
+.sw-bloom{background:#FBF6EE}
+.sw-bloom .n{color:#E86C5C}
+.sw-bloom::before{content:"";position:absolute;top:20px;right:24px;width:60px;height:60px;border-radius:50%;background:#FBE3DD}
+
+.card .body{padding:24px 24px 26px;display:flex;flex-direction:column;flex:1}
+.card h3{font-family:var(--disp);font-size:24px;font-weight:600;letter-spacing:-.01em}
+.card .tag{color:var(--coral);font-size:13px;font-weight:500;margin-top:4px}
+.card p{color:var(--tx-2);font-size:14.5px;margin-top:13px}
+.card ul{list-style:none;margin:16px 0 20px;display:grid;gap:8px}
+.card li{font-size:13px;color:var(--tx-3);padding-left:18px;position:relative}
+.card li::before{content:"›";position:absolute;left:0;color:var(--teal);font-family:var(--mono)}
+.card .actions{margin-top:auto;display:flex;gap:10px}
+.btn{flex:1;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:13px;border-radius:10px;transition:.2s;cursor:pointer}
+.btn.go{background:var(--teal);color:var(--bg);font-weight:600}
+.btn.go:hover{background:#5dfad8}
+.btn.code{border:1px solid var(--line);color:var(--tx-2)}
+.btn.code:hover{border-color:var(--teal);color:var(--teal)}
+
+.r1 .grid{padding-top:22px}
+.r1 .card{opacity:.62;transition:.3s}
+.r1 .card:hover{opacity:1;transform:translateY(-4px)}
+
+table{width:100%;border-collapse:collapse;margin:14px 0 10px;font-size:14px}
+.cmp{padding:14px 0 40px}
+.cmp h2{font-family:var(--disp);font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx-3);margin:24px 0 14px}
+th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);font-weight:500}
+td{color:var(--tx-2)}
+td:first-child{color:var(--tx);font-weight:500;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.foot{padding:26px 0 50px;border-top:1px solid var(--line);color:var(--tx-3);font-size:13px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.foot a{color:var(--teal)}
+@media(max-width:880px){.grid{grid-template-columns:1fr}.roundhead{flex-wrap:wrap}.roundhead p{margin-left:0;width:100%}table,thead,tbody,th,td,tr{display:block}thead{display:none}td{border:0;padding:4px 0}tr{padding:16px 0;border-bottom:1px solid var(--line)}td:first-child{color:var(--teal);margin-bottom:6px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="badge">RHRI · Website redesign · Round 2</span>
+    <h1>Three <em>radical</em> directions for rhri.bio</h1>
+    <p>Round 2 takes the round-1 feedback literally: far less copy, graphics carry the page, and each concept takes a real visual risk — including rebrands. Same message stack, same guardrails, three very different sites.</p>
+    <p class="meta">Brief: <b>"something more out there — reduce the content, add graphics"</b></p>
+  </header>
+
+  <section aria-labelledby="r2h">
+    <div class="roundhead">
+      <h2 id="r2h">Round 2</h2><span class="tag">For review</span>
+      <p>Each is a self-contained page. Best on desktop with sound off and scroll on.</p>
+    </div>
+    <div class="grid">
+      <!-- MITOSIS -->
+      <article class="card">
+        <div class="swatch sw-mitosis"><span class="n">04 / Mitosis</span></div>
+        <div class="body">
+          <h3>Mitosis</h3>
+          <div class="tag">The institute is a living organism</div>
+          <p>One bioluminescent cell — the RHRI mark itself — divides across a single scroll-driven canvas scene: 1 → 2 → 4 pillars → a clinic network → one coral heartbeat. ~100 words on the whole page.</p>
+          <ul>
+            <li>Rebrand: abyssal black + bioluminescent teal + coral</li>
+            <li>Type: Instrument Serif italic × JetBrains Mono ("lab poetry")</li>
+            <li>Signature: the logo literally performs the story</li>
+          </ul>
+          <div class="actions">
+            <a class="btn go" href="./mitosis/index.html">Open</a>
+            <a class="btn code" href="./mitosis/index.html" target="_blank" rel="noopener">New tab ↗</a>
+          </div>
+        </div>
+      </article>
+      <!-- SPECIMEN -->
+      <article class="card">
+        <div class="swatch sw-specimen"><span class="n">05 / Specimen</span></div>
+        <div class="body">
+          <h3>Specimen</h3>
+          <div class="tag">Lab brutalism — type as the graphic</div>
+          <p>A lab report blown up to poster scale: viewport-filling kinetic type that bulges around the cursor, stamp-slam pillar numerals, marquees, barcodes, and a rotated "RHRI VALIDATED" stamp.</p>
+          <ul>
+            <li>Rebrand: bone paper + ink black + acid #D6FF3D</li>
+            <li>Type: variable-weight Archivo, all caps, letters touching</li>
+            <li>Signature: cursor-reactive headline, stamped reveals</li>
+          </ul>
+          <div class="actions">
+            <a class="btn go" href="./specimen/index.html">Open</a>
+            <a class="btn code" href="./specimen/index.html" target="_blank" rel="noopener">New tab ↗</a>
+          </div>
+        </div>
+      </article>
+      <!-- DEEPFIELD -->
+      <article class="card">
+        <div class="swatch sw-deepfield"><div class="dots"><i></i><i></i><i></i><i></i></div><span class="n">06 / Deepfield</span></div>
+        <div class="body">
+          <h3>Deepfield</h3>
+          <div class="tag">Signal v2 — fly through the network</div>
+          <p>You don't look at the network, you fly through it: scroll moves a camera through a 3D field of clinic nodes, from broken edges to a dense validated core, one sentence per station, instrument-grade HUD.</p>
+          <ul>
+            <li>Evolved Signal DNA: deeper dark, glowing teal, coral beacon</li>
+            <li>Type: Space Grotesk × JetBrains Mono HUD chrome</li>
+            <li>Signature: scroll-driven 3D flight, clickable station rail</li>
+          </ul>
+          <div class="actions">
+            <a class="btn go" href="./deepfield/index.html">Open</a>
+            <a class="btn code" href="./deepfield/index.html" target="_blank" rel="noopener">New tab ↗</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="cmp" aria-labelledby="cmph">
+    <h2 id="cmph">Round 2 at a glance</h2>
+    <table>
+      <thead><tr><th>Dimension</th><th>04 · Mitosis</th><th>05 · Specimen</th><th>06 · Deepfield</th></tr></thead>
+      <tbody>
+        <tr><td>Core idea</td><td>The logo is alive — one cell divides through the story</td><td>A lab report at poster scale; type is the graphic</td><td>A camera flight through the validation network</td></tr>
+        <tr><td>Risk taken</td><td>Cinematic single-scene site, almost no copy</td><td>Full rebrand to bone/ink/acid brutalism</td><td>3D in vanilla JS, HUD instrument chrome</td></tr>
+        <tr><td>Palette</td><td>Abyss black · biolum teal · coral</td><td>Bone · ink · acid green</td><td>Near-black blue · glow teal · coral</td></tr>
+        <tr><td>Typography</td><td>Instrument Serif italic + mono</td><td>Variable Archivo, all caps</td><td>Space Grotesk + mono HUD</td></tr>
+        <tr><td>Copy on page</td><td>~100 words</td><td>~115 words</td><td>~130 words</td></tr>
+        <tr><td>Closest to</td><td>Award-site organism / WebGL feel</td><td>Brutalist poster sites</td><td>Round-1 Signal, pushed much further</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="r1" aria-labelledby="r1h">
+    <div class="roundhead">
+      <h2 id="r1h">Round 1</h2><span class="tag dim">Reviewed — none selected</span>
+      <p>Kept for comparison. Feedback: competent but safe; Signal was the closest hit.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="swatch sw-dossier"><span class="n">01 / Dossier</span></div>
+        <div class="body">
+          <h3>Dossier</h3>
+          <div class="tag">The site is a validation dossier</div>
+          <p>Editorial and authoritative — teal ink on warm paper, serif + mono, a numbered protocol spine and a four-pillar scorecard.</p>
+          <div class="actions">
+            <a class="btn go" href="./dossier/index.html">Open</a>
+            <a class="btn code" href="./dossier/index.html" target="_blank" rel="noopener">New tab ↗</a>
+          </div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="swatch sw-signal"><div class="dots"><i style="top:30px;left:40px"></i><i style="top:70px;left:120px"></i><i style="top:46px;left:200px"></i><i style="top:96px;left:70px"></i><i style="top:24px;left:150px"></i></div><span class="n">02 / Signal</span></div>
+        <div class="body">
+          <h3>Signal</h3>
+          <div class="tag">The decentralized network, alive</div>
+          <p>Dark, kinetic, technical — a live clinic-network canvas with audience channels. The seed for round 2's Deepfield.</p>
+          <div class="actions">
+            <a class="btn go" href="./signal/index.html">Open</a>
+            <a class="btn code" href="./signal/index.html" target="_blank" rel="noopener">New tab ↗</a>
+          </div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="swatch sw-bloom"><span class="n">03 / Bloom</span></div>
+        <div class="body">
+          <h3>Bloom</h3>
+          <div class="tag">From cell to clinic — human</div>
+          <p>Warm and optimistic — cream, coral, and teal blocks with a cell-division motif. Its cell seed grew into round 2's Mitosis.</p>
+          <div class="actions">
+            <a class="btn go" href="./bloom/index.html">Open</a>
+            <a class="btn code" href="./bloom/index.html" target="_blank" rel="noopener">New tab ↗</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <div class="foot">
+    <span>© 2026 Reproductive Health Research Institute · Redesign concepts — drafts, Daniel reviews &amp; ships</span>
+    <span>Shared copy deck: <a href="./CONTENT.md">CONTENT.md</a> · run notes: <a href="./README.md">README.md</a></span>
+  </div>
+</div>
+</body>
+</html>

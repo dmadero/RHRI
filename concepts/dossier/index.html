@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RHRI — Reproductive Health Research Institute · Validation Dossier</title>
+<meta name="description" content="An independent network that validates reproductive-health technology in real clinics — before it reaches patients. Rigorous Science. Real-World Impact.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23F7F4ED'/%3E%3Ccircle cx='50' cy='50' r='42' fill='none' stroke='%230A5F5F' stroke-width='2.5'/%3E%3Cline x1='30' y1='50' x2='70' y2='50' stroke='%230A5F5F' stroke-width='2'/%3E%3Ctext x='50' y='44' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='22' fill='%230A5F5F'%3ERH%3C/text%3E%3Ctext x='50' y='70' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='22' fill='%234A5F7F'%3ERI%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0A5F5F; --teal-d:#074a4a; --coral:#E86C5C; --slate:#4A5F7F;
+  --paper:#F7F4ED; --paper-2:#FBF9F4; --card:#FFFFFF;
+  --ink:#1A1F1E; --ink-2:#3c4543; --ink-3:#6c7572;
+  --rule:rgba(10,95,95,0.22); --rule-soft:rgba(10,95,95,0.12);
+  --serif:'Spectral',Georgia,serif; --mono:'JetBrains Mono',ui-monospace,monospace; --sans:'Inter',system-ui,sans-serif;
+  --mx:clamp(20px,5vw,84px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{font-family:var(--serif);background:var(--paper);color:var(--ink);line-height:1.62;font-size:18px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+::selection{background:var(--teal);color:var(--paper)}
+
+/* mono label system */
+.mono{font-family:var(--mono);font-weight:500;letter-spacing:.04em}
+.label{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--teal)}
+.label.coral{color:var(--coral)}
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+
+/* ---------- progress + top bar ---------- */
+.progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--coral);z-index:120}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(247,244,237,0.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.topbar-in{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 var(--mx);height:62px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand svg{width:34px;height:34px;flex:none}
+.brand .bt{display:flex;flex-direction:column;line-height:1}
+.brand .bt b{font-family:var(--mono);font-weight:600;font-size:14px;letter-spacing:.12em;color:var(--ink)}
+.brand .bt span{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin-top:4px}
+.topnav{display:flex;align-items:center;gap:4px}
+.topnav a{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--ink-2);padding:8px 12px;border-radius:4px;transition:.2s}
+.topnav a:hover{color:var(--teal);background:rgba(10,95,95,.06)}
+.topnav .doc{color:var(--ink-3)}
+.btn{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:10px 18px;border-radius:4px;border:1px solid var(--teal);background:var(--teal);color:var(--paper);cursor:pointer;text-decoration:none;transition:.2s;display:inline-block}
+.btn:hover{background:var(--teal-d);border-color:var(--teal-d)}
+.btn.ghost{background:transparent;color:var(--teal)}
+.btn.ghost:hover{background:rgba(10,95,95,.07);color:var(--teal)}
+.btn.coral{background:var(--coral);border-color:var(--coral);color:#fff}
+.btn.coral:hover{background:#d85a4a;border-color:#d85a4a}
+.menu-btn{display:none;background:none;border:1px solid var(--rule);border-radius:4px;width:40px;height:36px;cursor:pointer;flex-direction:column;gap:4px;align-items:center;justify-content:center}
+.menu-btn span{width:18px;height:1.5px;background:var(--ink)}
+
+/* ---------- shell / grid ---------- */
+main{padding-top:62px}
+.sheet{max-width:1280px;margin:0 auto;padding:0 var(--mx)}
+section{position:relative}
+.sec{padding:96px 0;border-top:1px solid var(--rule)}
+.sec:first-of-type{border-top:0}
+.sechead{display:grid;grid-template-columns:120px 1fr;gap:28px;align-items:baseline;margin-bottom:48px}
+.sechead .no{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--coral);letter-spacing:.1em}
+.sechead h2{font-weight:500;font-size:clamp(28px,4.2vw,46px);line-height:1.08;letter-spacing:-.01em}
+.sechead .lede{grid-column:2;max-width:62ch;color:var(--ink-2);font-size:19px;margin-top:14px}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- hero ---------- */
+.hero{padding:74px 0 70px;border-top:0;position:relative}
+.hero-grid{display:grid;grid-template-columns:120px 1fr;gap:28px}
+.hero-meta{font-family:var(--mono);font-size:11px;line-height:2;color:var(--ink-3);letter-spacing:.04em;border-right:1px solid var(--rule-soft);padding-right:18px}
+.hero-meta b{color:var(--teal);display:block;font-weight:600;letter-spacing:.16em;margin-bottom:8px}
+.hero h1{font-weight:400;font-size:clamp(40px,8vw,98px);line-height:.98;letter-spacing:-.02em;margin:6px 0 0}
+.hero h1 em{font-style:italic;color:var(--teal)}
+.hero h1 .ul{position:relative;white-space:nowrap}
+.hero h1 .ul::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:3px;background:var(--coral)}
+.hero-sub{max-width:60ch;color:var(--ink-2);font-size:21px;margin:34px 0 0;line-height:1.55}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:36px}
+.hero-rule{display:grid;grid-template-columns:120px 1fr;gap:28px;margin-top:64px;padding-top:22px;border-top:1px solid var(--rule)}
+.hero-rule .tag{align-self:center}
+.specrow{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.specrow div{padding:0 22px;border-left:1px solid var(--rule-soft)}
+.specrow div:first-child{padding-left:0;border-left:0}
+.specrow .k{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:6px}
+.specrow .v{font-size:15px;color:var(--ink-2);line-height:1.4}
+
+/* ---------- problem ---------- */
+.fail{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--card)}
+.fail article{padding:34px 30px;border-left:1px solid var(--rule)}
+.fail article:first-child{border-left:0}
+.fail .fn{font-family:var(--mono);font-size:12px;color:var(--coral);font-weight:600;letter-spacing:.1em}
+.fail h3{font-weight:600;font-size:23px;margin:16px 0 12px;letter-spacing:-.01em}
+.fail p{color:var(--ink-2);font-size:16.5px}
+.proseband{display:grid;grid-template-columns:120px 1fr;gap:28px;margin-top:48px}
+.proseband p{max-width:64ch;font-size:21px;color:var(--ink)}
+.proseband p+p{margin-top:20px}
+
+/* ---------- what we are ---------- */
+.def{display:grid;grid-template-columns:1.1fr .9fr;gap:0;border:1px solid var(--rule);border-radius:6px;background:var(--card);overflow:hidden}
+.def .body{padding:46px 44px}
+.def .body p{font-size:22px;line-height:1.55}
+.def .body p+p{margin-top:18px;font-size:18px;color:var(--ink-2)}
+.def .body .neg{font-style:italic;color:var(--slate)}
+.def .aside{background:var(--teal);color:var(--paper);padding:44px 40px;display:flex;flex-direction:column;justify-content:center}
+.def .aside .label{color:rgba(255,255,255,.7)}
+.def .aside ul{list-style:none;margin-top:18px;display:grid;gap:14px}
+.def .aside li{font-family:var(--mono);font-size:13px;letter-spacing:.04em;padding-left:22px;position:relative;color:rgba(255,255,255,.92)}
+.def .aside li::before{content:"—";position:absolute;left:0;color:var(--coral)}
+
+/* ---------- scorecard (signature) ---------- */
+.scorecard{border:1.5px solid var(--teal);border-radius:8px;background:var(--card);overflow:hidden}
+.sc-top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 28px;background:var(--teal);color:var(--paper);flex-wrap:wrap}
+.sc-top b{font-family:var(--mono);font-weight:600;letter-spacing:.14em;font-size:13px;text-transform:uppercase}
+.sc-top span{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:rgba(255,255,255,.72)}
+.sc-row{display:grid;grid-template-columns:88px 1fr 1.15fr;gap:0;border-top:1px solid var(--rule);align-items:stretch}
+.sc-row:first-of-type{border-top:0}
+.sc-row .pn{font-family:var(--mono);font-size:30px;font-weight:600;color:var(--teal);padding:26px 0 0 28px}
+.sc-row .pmid{padding:26px 26px}
+.sc-row .pmid h3{font-weight:600;font-size:24px;letter-spacing:-.01em}
+.sc-row .pmid p{color:var(--ink-2);font-size:16px;margin-top:8px;max-width:36ch}
+.sc-row .pq{padding:26px 28px;border-left:1px solid var(--rule);background:var(--paper-2)}
+.sc-row .pq .ql{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--coral);display:block;margin-bottom:12px}
+.sc-row .pq ul{list-style:none;display:grid;gap:9px}
+.sc-row .pq li{font-size:14.5px;color:var(--ink-2);padding-left:18px;position:relative;line-height:1.4}
+.sc-row .pq li::before{content:"›";position:absolute;left:0;color:var(--teal);font-family:var(--mono)}
+.sc-foot{padding:16px 28px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.sc-foot .tag{align-self:center}
+
+/* ---------- process ---------- */
+.steps{display:grid;gap:0;counter-reset:s}
+.step{display:grid;grid-template-columns:120px 1fr;gap:28px;padding:30px 0;border-top:1px solid var(--rule);align-items:baseline}
+.step:first-child{border-top:0}
+.step .sn{font-family:var(--mono);font-size:13px;color:var(--coral);font-weight:600}
+.step .sn b{display:block;color:var(--teal);font-size:34px;font-weight:600;margin-top:6px;letter-spacing:.02em}
+.step h3{font-weight:600;font-size:25px;letter-spacing:-.01em}
+.step p{color:var(--ink-2);max-width:60ch;margin-top:8px;font-size:17px}
+.step .dur{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.08em;margin-top:10px}
+
+/* ---------- serve ---------- */
+.serve{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.svc{border:1px solid var(--rule);border-radius:6px;background:var(--card);padding:32px 30px;transition:.25s}
+.svc:hover{border-color:var(--teal);box-shadow:0 14px 36px rgba(10,95,95,.07)}
+.svc .label{margin-bottom:12px}
+.svc h3{font-weight:600;font-size:24px;letter-spacing:-.01em}
+.svc p{color:var(--ink-2);margin-top:10px;font-size:16.5px}
+
+/* ---------- innovation verticals ---------- */
+.verts{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--card)}
+.vert{padding:30px 26px;border-left:1px solid var(--rule)}
+.vert:first-child{border-left:0}
+.vert .vn{font-family:var(--mono);font-size:11px;color:var(--coral);letter-spacing:.14em}
+.vert h3{font-weight:600;font-size:21px;margin:14px 0 10px}
+.vert p{color:var(--ink-2);font-size:15px;line-height:1.5}
+
+/* ---------- model + principles ---------- */
+.modelgrid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--card)}
+.modelgrid .mcol{padding:40px}
+.modelgrid .mcol+.mcol{border-left:1px solid var(--rule)}
+.modelgrid h3{font-weight:600;font-size:24px;margin-bottom:14px}
+.modelgrid p{color:var(--ink-2)}
+.principles{list-style:none;display:grid;gap:0;margin-top:8px}
+.principles li{font-family:var(--mono);font-size:14px;letter-spacing:.02em;padding:14px 0;border-top:1px solid var(--rule-soft);color:var(--ink);display:flex;gap:14px;align-items:baseline}
+.principles li:first-child{border-top:0}
+.principles li i{color:var(--coral);font-style:normal;font-size:11px}
+
+/* ---------- timeline ---------- */
+.tl{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--card)}
+.tl article{padding:34px 30px;border-left:1px solid var(--rule);position:relative}
+.tl article:first-child{border-left:0}
+.tl .yr{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--teal);letter-spacing:.08em}
+.tl .ph{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);margin:14px 0 8px}
+.tl h3{font-weight:600;font-size:21px;margin-bottom:10px}
+.tl p{color:var(--ink-2);font-size:15.5px}
+
+/* ---------- team ---------- */
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.member{border:1px solid var(--rule);border-radius:6px;background:var(--card);padding:30px 28px}
+.member .mono.idx{font-size:11px;color:var(--ink-3)}
+.member .av{width:54px;height:54px;border-radius:50%;border:1.5px solid var(--teal);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:600;color:var(--teal);margin:14px 0 16px;font-size:16px}
+.member h3{font-weight:600;font-size:20px}
+.member .role{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin:6px 0 12px}
+.member p{color:var(--ink-2);font-size:15px;line-height:1.55}
+.note{margin-top:20px;font-style:italic;color:var(--ink-3);font-size:15.5px}
+
+/* ---------- closing ---------- */
+.closing{background:var(--teal);color:var(--paper);border-radius:8px;padding:clamp(40px,6vw,76px);position:relative;overflow:hidden}
+.closing .label{color:rgba(255,255,255,.7)}
+.closing h2{font-weight:400;font-size:clamp(30px,5vw,56px);line-height:1.05;margin:16px 0 18px;letter-spacing:-.01em}
+.closing h2 em{font-style:italic;color:#ffd9d2}
+.closing p{max-width:54ch;color:rgba(255,255,255,.82);font-size:19px}
+.closing .hero-actions{margin-top:30px}
+.closing .gridlines{position:absolute;inset:0;background:linear-gradient(transparent 95%,rgba(255,255,255,.06) 95%),linear-gradient(90deg,transparent 95%,rgba(255,255,255,.06) 95%);background-size:38px 38px;pointer-events:none}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--rule);padding:54px 0 34px;margin-top:0}
+.foot{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px}
+.foot .fb svg{width:40px;height:40px}
+.foot .fb p{color:var(--ink-2);font-size:15px;max-width:30ch;margin-top:14px}
+.foot h4{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);margin-bottom:14px}
+.foot a{display:block;text-decoration:none;color:var(--ink-2);font-size:15px;margin-bottom:9px;transition:.2s}
+.foot a:hover{color:var(--teal)}
+.footbar{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:40px;padding-top:20px;border-top:1px solid var(--rule-soft)}
+.footbar .tag{color:var(--ink-3)}
+
+/* ---------- modal ---------- */
+.overlay{position:fixed;inset:0;z-index:200;background:rgba(26,31,30,.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px}
+.overlay.on{display:flex}
+.modal{background:var(--paper);border:1.5px solid var(--teal);border-radius:8px;max-width:560px;width:100%;max-height:92vh;overflow:auto}
+.modal-h{padding:26px 32px;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.modal-h .label{margin-bottom:8px}
+.modal-h h3{font-weight:500;font-size:27px;letter-spacing:-.01em}
+.modal-h p{color:var(--ink-2);font-size:15px;margin-top:6px}
+.x{background:none;border:1px solid var(--rule);border-radius:4px;width:34px;height:34px;cursor:pointer;font-size:18px;color:var(--ink-2);flex:none}
+.modal-b{padding:26px 32px}
+.fg{margin-bottom:16px}
+.fg label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:6px}
+.fg .req{color:var(--coral)}
+.fg input,.fg select,.fg textarea{width:100%;font-family:var(--sans);font-size:15px;padding:11px 13px;border:1px solid var(--rule);border-radius:5px;background:var(--card);color:var(--ink);outline:none;transition:.2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(10,95,95,.1)}
+.fg textarea{resize:vertical;min-height:96px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fnote{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);text-align:center;margin-top:12px;letter-spacing:.04em}
+.sent{display:none;text-align:center;padding:50px 32px}
+.sent.on{display:block}
+.sent .chk{width:56px;height:56px;border:1.5px solid var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;color:var(--teal);font-size:24px}
+.sent h3{font-weight:500;font-size:24px}
+.sent p{color:var(--ink-2);margin-top:8px;max-width:38ch;margin-left:auto;margin-right:auto}
+
+@media(max-width:980px){
+  .hero-grid,.proseband,.step,.sechead,.hero-rule{grid-template-columns:1fr}
+  .hero-meta{border-right:0;border-bottom:1px solid var(--rule-soft);padding:0 0 16px}
+  .sechead{gap:8px}.sechead .lede{grid-column:1}
+  .def,.modelgrid{grid-template-columns:1fr}
+  .def .aside{border-top:1px solid rgba(255,255,255,.15)}
+  .modelgrid .mcol+.mcol{border-left:0;border-top:1px solid var(--rule)}
+  .verts,.fail,.tl{grid-template-columns:1fr}
+  .fail article,.vert,.tl article{border-left:0;border-top:1px solid var(--rule)}
+  .fail article:first-child,.vert:first-child,.tl article:first-child{border-top:0}
+  .team{grid-template-columns:1fr}
+  .sc-row{grid-template-columns:60px 1fr}
+  .sc-row .pq{grid-column:1/-1;border-left:0;border-top:1px solid var(--rule)}
+  .sc-row .pn{padding:22px 0 0 18px;font-size:24px}
+  .specrow{grid-template-columns:1fr 1fr}
+  .specrow div{border-left:0;padding:14px 0;border-top:1px solid var(--rule-soft)}
+}
+@media(max-width:760px){
+  body{font-size:17px}
+  .topnav{display:none}.menu-btn{display:flex}
+  .topbar.open .topnav{display:flex;position:absolute;top:62px;left:0;right:0;flex-direction:column;background:var(--paper);border-bottom:1px solid var(--rule);padding:14px var(--mx);gap:2px}
+  .topbar.open .topnav a{padding:11px 4px}
+  .serve,.foot{grid-template-columns:1fr}
+  .specrow{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<!-- shared logo symbol -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="logo" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="42" fill="none" stroke="#0A5F5F" stroke-width="2.4"/>
+  <line x1="30" y1="50" x2="70" y2="50" stroke="#0A5F5F" stroke-width="2"/>
+  <text x="50" y="44.5" text-anchor="middle" font-family="Spectral,Georgia,serif" font-weight="700" font-size="21" letter-spacing="1.5" fill="#0A5F5F">RH</text>
+  <text x="50" y="70" text-anchor="middle" font-family="Spectral,Georgia,serif" font-weight="700" font-size="21" letter-spacing="1.5" fill="#4A5F7F">RI</text>
+</symbol></defs></svg>
+
+<header class="topbar" id="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="#top" aria-label="RHRI home">
+      <svg aria-hidden="true"><use href="#logo"/></svg>
+      <span class="bt"><b>RHRI</b><span>Validation Dossier</span></span>
+    </a>
+    <nav class="topnav" aria-label="Sections">
+      <a href="#problem">Problem</a>
+      <a href="#framework">Framework</a>
+      <a href="#process">Process</a>
+      <a href="#serve">Audiences</a>
+      <a href="#team">Team</a>
+      <a class="btn coral" href="#contact" onclick="openC(event)">Get involved</a>
+    </nav>
+    <button class="menu-btn" aria-label="Menu" onclick="document.getElementById('topbar').classList.toggle('open')"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+<div class="sheet">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-grid">
+      <div class="hero-meta">
+        <b>Document</b>
+        RHRI / 2026<br>Institute Brief<br>Rev. 01<br><br>
+        <b>Classification</b>
+        Independent<br>Validation<br>Infrastructure
+      </div>
+      <div>
+        <p class="label">Reproductive Health Research Institute</p>
+        <h1 style="margin-top:18px">Rigorous <em>Science.</em><br><span class="ul">Real-World</span> Impact.</h1>
+        <p class="hero-sub">We validate new reproductive-health technology in real clinics — testing whether it actually works at scale, holds up economically, and improves care — so only innovation that earns it reaches patients.</p>
+        <div class="hero-actions">
+          <a class="btn coral" href="#contact" onclick="openC(event)">Get involved</a>
+          <a class="btn ghost" href="#framework">How we evaluate</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-rule">
+      <span class="tag">Contents</span>
+      <div class="specrow">
+        <div><span class="k">01 — Problem</span><span class="v">A broken path from lab to clinic</span></div>
+        <div><span class="k">02 — Method</span><span class="v">The four-pillar framework</span></div>
+        <div><span class="k">03 — Process</span><span class="v">Prototype to practice</span></div>
+        <div><span class="k">04 — Network</span><span class="v">Decentralized & independent</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="sec" id="problem">
+    <div class="sechead reveal">
+      <span class="no">01</span>
+      <h2>The path from lab to clinic is broken.</h2>
+      <p class="lede">The field is producing real breakthroughs — AI embryo assessment, microfluidics, genomics. Most of it stalls before it ever reaches a patient.</p>
+    </div>
+    <div class="fail reveal">
+      <article>
+        <span class="fn">FAILURE 01</span>
+        <h3>Misaligned incentives</h3>
+        <p>Innovators expect adoption; clinics expect a finished, validated product. Both lose in the gap between.</p>
+      </article>
+      <article>
+        <span class="fn">FAILURE 02</span>
+        <h3>No shared standard</h3>
+        <p>Nothing independent validates a technology before market entry, so marketing outruns the evidence.</p>
+      </article>
+      <article>
+        <span class="fn">FAILURE 03</span>
+        <h3>Clinics carry the risk</h3>
+        <p>Good ideas die from adoption friction while mediocre ones survive on a sales deck.</p>
+      </article>
+    </div>
+    <div class="proseband reveal">
+      <span class="tag">Summary</span>
+      <div>
+        <p>Start-ups spend scarce capital paying clinics to trial products that often arrive dead on launch. Clinics absorb the risk of unproven tools. Patients get inconsistent care with no clear quality signal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT WE ARE -->
+  <section class="sec" id="about">
+    <div class="sechead reveal">
+      <span class="no">02</span>
+      <h2>What RHRI is.</h2>
+      <p class="lede">Not a regulator, a lab, or a consultancy. Independent validation infrastructure.</p>
+    </div>
+    <div class="def reveal">
+      <div class="body">
+        <p>A decentralized network of clinics where new technology is tested under real operating conditions, against one shared standard — and the results are published.</p>
+        <p class="neg">We validate, connect, and standardize. We complement the ecosystem rather than compete with it.</p>
+      </div>
+      <div class="aside">
+        <span class="label">What we are not</span>
+        <ul>
+          <li>A regulatory body</li>
+          <li>A single research lab</li>
+          <li>A commercial consultancy</li>
+          <li>A gatekeeper</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FRAMEWORK SCORECARD -->
+  <section class="sec" id="framework">
+    <div class="sechead reveal">
+      <span class="no">03</span>
+      <h2>The Four-Pillar Framework.</h2>
+      <p class="lede">Every technology is assessed on four dimensions at once. Most evaluations test only the first. We test all four.</p>
+    </div>
+    <div class="scorecard reveal">
+      <div class="sc-top">
+        <b>Assessment Scorecard</b>
+        <span>FORM RHRI-4P · APPLIED TO EVERY TECHNOLOGY</span>
+      </div>
+      <div class="sc-row">
+        <div class="pn">01</div>
+        <div class="pmid"><h3>Replicability</h3><p>Do results hold across operators, labs, and geographies?</p></div>
+        <div class="pq"><span class="ql">Evaluated for</span><ul>
+          <li>Intra-operator consistency</li><li>Inter-operator validation</li><li>Protocol clarity & quality control</li></ul></div>
+      </div>
+      <div class="sc-row">
+        <div class="pn">02</div>
+        <div class="pmid"><h3>Scalability</h3><p>Does it work at clinic volume and across real workforce skill levels?</p></div>
+        <div class="pq"><span class="ql">Evaluated for</span><ul>
+          <li>Function at clinic-level volume</li><li>Tolerance to skill distribution</li><li>Does scale improve or break consistency?</li></ul></div>
+      </div>
+      <div class="sc-row">
+        <div class="pn">03</div>
+        <div class="pmid"><h3>Sustainability</h3><p>Do performance and unit economics hold as volume grows?</p></div>
+        <div class="pq"><span class="ql">Evaluated for</span><ul>
+          <li>Unit economics at scale</li><li>Operational load on the clinic</li><li>Viability without long-term strain</li></ul></div>
+      </div>
+      <div class="sc-row">
+        <div class="pn">04</div>
+        <div class="pmid"><h3>Patient Value</h3><p>The only measure that ultimately counts.</p></div>
+        <div class="pq"><span class="ql">Evaluated for</span><ul>
+          <li>Lower cost & better outcomes</li><li>Shorter time-to-baby</li><li>Wider, more equitable access</li></ul></div>
+      </div>
+      <div class="sc-foot">
+        <span class="tag">Pass requires evidence across all four pillars.</span>
+        <span class="tag" style="color:var(--coral)">RHRI-VALIDATED ▢</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="sec" id="process">
+    <div class="sechead reveal">
+      <span class="no">04</span>
+      <h2>From prototype to practice.</h2>
+      <p class="lede">A clear path. Durations are typical, not guaranteed.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><div class="sn">STEP<b>01</b></div><div><h3>Review</h3><p>We assess the technology, its stage, and what validation would need to prove.</p><div class="dur">≈ 2–4 weeks</div></div></div>
+      <div class="step reveal"><div class="sn">STEP<b>02</b></div><div><h3>Protocol</h3><p>We design the study, define endpoints, and match it to clinics in the network.</p><div class="dur">≈ 4–6 weeks</div></div></div>
+      <div class="step reveal"><div class="sn">STEP<b>03</b></div><div><h3>Multi-site validation</h3><p>Tested across clinics, geographies, and operator skill levels under real conditions.</p><div class="dur">≈ 3–6 months</div></div></div>
+      <div class="step reveal"><div class="sn">STEP<b>04</b></div><div><h3>Evidence</h3><p>Outcomes, economics, and operational fit measured against the four pillars — and published.</p><div class="dur">≈ 4–8 weeks</div></div></div>
+      <div class="step reveal"><div class="sn">STEP<b>05</b></div><div><h3>Implementation</h3><p>SOPs, training, and rollout support for what earns it.</p><div class="dur">Ongoing</div></div></div>
+    </div>
+  </section>
+
+  <!-- SERVE -->
+  <section class="sec" id="serve">
+    <div class="sechead reveal">
+      <span class="no">05</span>
+      <h2>Who we serve.</h2>
+      <p class="lede">One standard, four stakeholders, aligned around evidence.</p>
+    </div>
+    <div class="serve">
+      <article class="svc reveal"><span class="label">Innovators</span><h3>A path that earns trust</h3><p>Credible, real-world validation clinics trust — a faster, lower-cost route from prototype to adoption than buying trials one clinic at a time.</p></article>
+      <article class="svc reveal"><span class="label">Clinics</span><h3>Proven before you adopt</h3><p>First access to technology that's actually been proven, with the protocols and support to adopt it — and far less risk.</p></article>
+      <article class="svc reveal"><span class="label coral">Patients</span><h3>The reason the standard exists</h3><p>RHRI-validated means proven to improve outcomes, reduce cost, or widen access in the real world.</p></article>
+      <article class="svc reveal"><span class="label">Funders</span><h3>Investment that pays off</h3><p>Infrastructure that grows the market, speeds translation, and separates signal from noise.</p></article>
+    </div>
+  </section>
+
+  <!-- VERTICALS -->
+  <section class="sec" id="areas">
+    <div class="sechead reveal">
+      <span class="no">06</span>
+      <h2>Areas of innovation.</h2>
+      <p class="lede">Four verticals, one framework. Every category runs through the same four pillars.</p>
+    </div>
+    <div class="verts reveal">
+      <div class="vert"><span class="vn">VERTICAL A</span><h3>Software</h3><p>AI and digital tools across the workflow: embryo assessment, follicle counting, decision support, predictive analytics.</p></div>
+      <div class="vert"><span class="vn">VERTICAL B</span><h3>Hardware</h3><p>Devices that add precision and consistency: robotics, microfluidics, imaging, cryostorage, environmental monitoring.</p></div>
+      <div class="vert"><span class="vn">VERTICAL C</span><h3>Process</h3><p>Re-engineering how care is delivered: lab workflow, routing, protocol integration, quality systems.</p></div>
+      <div class="vert"><span class="vn">VERTICAL D</span><h3>Biotech</h3><p>Anything needing clinical evidence: culture media, supplements, genetic testing (PGT), biomarkers, novel culture systems.</p></div>
+    </div>
+  </section>
+
+  <!-- MODEL + PRINCIPLES -->
+  <section class="sec" id="model">
+    <div class="sechead reveal">
+      <span class="no">07</span>
+      <h2>Operating model & principles.</h2>
+      <p class="lede">Independence is the product. Without it, validation is worthless.</p>
+    </div>
+    <div class="modelgrid reveal">
+      <div class="mcol">
+        <h3>Decentralized by design</h3>
+        <p>No single headquarters. Talent and partners are distributed; pilots run where conditions are best. Transparent funding, diverse governance, and published methodology keep the standard honest.</p>
+      </div>
+      <div class="mcol">
+        <h3>What guides us</h3>
+        <ul class="principles">
+          <li><i>01</i> Evidence over enthusiasm.</li>
+          <li><i>02</i> Collaboration over competition.</li>
+          <li><i>03</i> Impact over publications.</li>
+          <li><i>04</i> Transparency by default.</li>
+          <li><i>05</i> Pragmatism over perfection.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="sec" id="direction">
+    <div class="sechead reveal">
+      <span class="no">08</span>
+      <h2>Three-year direction.</h2>
+      <p class="lede">Foundation, then network, then standard.</p>
+    </div>
+    <div class="tl reveal">
+      <article><div class="yr">2026</div><div class="ph">Phase 01 — Foundation</div><h3>Stand it up</h3><p>Establish governance and the founding team. Build the validation protocols. Run the first studies and publish the methodology.</p></article>
+      <article><div class="yr">2027</div><div class="ph">Phase 02 — Network</div><h3>Grow the network</h3><p>Expand the partner-clinic network. Launch membership and the validation registry. Reach sustainability.</p></article>
+      <article><div class="yr">2028</div><div class="ph">Phase 03 — Standard</div><h3>Become the standard</h3><p>"RHRI-validated" becomes a recognized mark of quality. Influence guidelines; launch education and certification.</p></article>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="sec" id="team">
+    <div class="sechead reveal">
+      <span class="no">09</span>
+      <h2>Team.</h2>
+      <p class="lede">Science, medicine, and clinical operations.</p>
+    </div>
+    <div class="team">
+      <article class="member reveal"><span class="mono idx">01 / FOUNDER</span><div class="av">DM</div><h3>Daniel Madero</h3><div class="role">Founder & Director</div><p>Fertility executive focused on scaling clinics and building operating models across the Americas and Europe. Former CEO of Fertilidad Integral; senior advisor to RHEA and GenPrime.</p></article>
+      <article class="member reveal"><span class="mono idx">02 / CLINICAL</span><div class="av">CH</div><h3>Cynthia Hudson</h3><div class="role">Clinical Strategy</div><p>SVP of Clinics at TMRW Life Sciences. Embryologist and medical technologist with 20+ years in reproductive medicine. Founder of NOVA Genomics; owner of Perch Fertility, New Jersey.</p></article>
+      <article class="member reveal"><span class="mono idx">03 / SCIENCE</span><div class="av">FA</div><h3>Felicitas Azpiroz</h3><div class="role">Research & Science</div><p>Reproductive scientist at the Universitat Autònoma de Barcelona (UAB), working within the Eugin Group research ecosystem — bridging rigorous lab science and clinically relevant questions.</p></article>
+    </div>
+    <p class="note reveal">Advisory board and partner network are in formation, and shown as such — never invented.</p>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="sec" id="contact">
+    <div class="closing reveal">
+      <div class="gridlines"></div>
+      <div style="position:relative">
+        <span class="label">Get involved</span>
+        <h2>This is the foundation.<br><em>Now we build.</em></h2>
+        <p>Innovator, clinic, researcher, or funder — if you want validation to mean something, let's talk.</p>
+        <div class="hero-actions">
+          <a class="btn coral" href="#" onclick="openC(event)">Open the contact form</a>
+          <a class="btn ghost" style="color:#fff;border-color:rgba(255,255,255,.5)" href="mailto:dm@rhri.bio">dm@rhri.bio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /sheet -->
+
+<footer>
+  <div class="sheet">
+    <div class="foot">
+      <div class="fb">
+        <svg aria-hidden="true"><use href="#logo"/></svg>
+        <p>Reproductive Health Research Institute. Rigorous Science. Real-World Impact.</p>
+      </div>
+      <div><h4>Document</h4><a href="#problem">The problem</a><a href="#framework">Framework</a><a href="#process">Process</a><a href="#direction">Direction</a></div>
+      <div><h4>Audiences</h4><a href="#serve" onclick="openC(event)">Innovators</a><a href="#serve" onclick="openC(event)">Clinics</a><a href="#serve" onclick="openC(event)">Funders</a></div>
+      <div><h4>Contact</h4><a href="mailto:dm@rhri.bio">dm@rhri.bio</a><a href="#contact" onclick="openC(event)">Get involved</a></div>
+    </div>
+    <div class="footbar">
+      <span class="tag">© 2026 Reproductive Health Research Institute</span>
+      <span class="tag">Concept: Dossier · Rigorous Science. Real-World Impact.</span>
+    </div>
+  </div>
+</footer>
+</main>
+
+<!-- CONTACT MODAL -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeC()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle">
+    <div id="formWrap">
+      <div class="modal-h">
+        <div><span class="label">Contact / RHRI-INTAKE</span><h3 id="mtitle">Get in touch</h3><p>Innovator, clinic, researcher, or funder — tell us how you'd like to be involved.</p></div>
+        <button class="x" aria-label="Close" onclick="closeC()">×</button>
+      </div>
+      <div class="modal-b">
+        <form id="form" onsubmit="return sendC(event)">
+          <div class="frow">
+            <div class="fg"><label>First name <span class="req">*</span></label><input name="first" required placeholder="First name"></div>
+            <div class="fg"><label>Last name <span class="req">*</span></label><input name="last" required placeholder="Last name"></div>
+          </div>
+          <div class="fg"><label>Email <span class="req">*</span></label><input type="email" name="email" required placeholder="you@example.com"></div>
+          <div class="fg"><label>Organization</label><input name="org" placeholder="Company, clinic, or institution"></div>
+          <div class="fg"><label>I am a… <span class="req">*</span></label>
+            <select name="role" required>
+              <option value="" disabled selected>Select one</option>
+              <option>Innovator / MedTech</option><option>Clinic / Clinic group</option>
+              <option>Researcher / Academic</option><option>Investor / Funder</option>
+              <option>Patient / Advocate</option><option>Other</option>
+            </select>
+          </div>
+          <div class="fg"><label>Message <span class="req">*</span></label><textarea name="msg" required placeholder="How would you like to be involved?"></textarea></div>
+          <button class="btn coral" type="submit" style="width:100%;padding:13px">Send message</button>
+          <p class="fnote">Opens your email client · delivered to dm@rhri.bio</p>
+        </form>
+      </div>
+    </div>
+    <div class="sent" id="sent">
+      <div class="chk">✓</div>
+      <h3>Message ready</h3>
+      <p>Your email client has opened with the message. Press send to deliver it to the RHRI team.</p>
+      <button class="btn ghost" style="margin-top:20px" onclick="closeC()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // scroll progress
+  var prog=document.getElementById('progress');
+  function onScroll(){
+    var h=document.documentElement;
+    var max=h.scrollHeight-h.clientHeight;
+    prog.style.width=(max>0?(h.scrollTop/max*100):0)+'%';
+    document.getElementById('topbar').style.boxShadow=h.scrollTop>20?'0 2px 18px rgba(10,95,95,.07)':'none';
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+  // reveals
+  var rm=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(rm){document.querySelectorAll('.reveal').forEach(function(e){e.classList.add('in')});}
+  else{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+    document.querySelectorAll('.reveal').forEach(function(e){io.observe(e)});
+  }
+
+  // close mobile menu on nav click
+  document.querySelectorAll('.topnav a').forEach(function(a){a.addEventListener('click',function(){document.getElementById('topbar').classList.remove('open')})});
+})();
+
+function openC(e){if(e)e.preventDefault();document.getElementById('overlay').classList.add('on');document.body.style.overflow='hidden';document.getElementById('formWrap').style.display='block';document.getElementById('sent').classList.remove('on');}
+function closeC(){document.getElementById('overlay').classList.remove('on');document.body.style.overflow='';}
+function sendC(e){
+  e.preventDefault();
+  var f=e.target,d=new FormData(f);
+  var name=(d.get('first')+' '+d.get('last')).trim();
+  var subject='RHRI inquiry — '+name+' ('+d.get('role')+')';
+  var body='Name: '+name+'\nEmail: '+d.get('email')+'\nOrganization: '+(d.get('org')||'—')+'\nRole: '+d.get('role')+'\n\nMessage:\n'+d.get('msg');
+  window.location.href='mailto:dm@rhri.bio?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+  document.getElementById('formWrap').style.display='none';
+  document.getElementById('sent').classList.add('on');
+  f.reset();return false;
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeC()});
+</script>
+</body>
+</html>

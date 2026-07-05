@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RHRI — Deepfield</title>
+<meta name="description" content="RHRI — Reproductive Health Research Institute. An independent network that validates reproductive-health technology in real clinics, before it reaches patients. Fly through the validation network.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2302090E'/%3E%3Ccircle cx='32' cy='32' r='21' fill='none' stroke='%2319E3C2' stroke-width='2.5' opacity='0.9'/%3E%3Ccircle cx='32' cy='32' r='26' fill='none' stroke='%2319E3C2' stroke-width='1' opacity='0.25'/%3E%3Cline x1='13' y1='32' x2='51' y2='32' stroke='%2319E3C2' stroke-width='1.6'/%3E%3Ctext x='32' y='28' font-family='monospace' font-size='12' font-weight='bold' fill='%2319E3C2' text-anchor='middle'%3ERH%3C/text%3E%3Ctext x='32' y='47' font-family='monospace' font-size='12' font-weight='bold' fill='%2319E3C2' text-anchor='middle'%3ERI%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#02090E;
+  --teal:#19E3C2;
+  --teal-dim:#0A5F5F;
+  --coral:#FF6A55;
+  --slate:#6E8CA0;
+  --ink:#E6F2EF;
+  --sub:#A9C2CE;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --grot:'Space Grotesk',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--grot);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(25,227,194,.25)}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:2px}
+
+/* ---------- skip link ---------- */
+.skip{
+  position:fixed;top:-60px;left:50%;transform:translateX(-50%);
+  z-index:100;padding:10px 18px;
+  font:500 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--bg);background:var(--teal);text-decoration:none;
+  transition:top .25s ease;
+}
+.skip:focus-visible{top:14px;outline-offset:1px;outline-color:var(--ink)}
+
+/* ---------- canvas + vignette ---------- */
+#field{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;background:var(--bg)}
+.vignette{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 48%, transparent 52%, rgba(2,9,14,.78) 100%);
+}
+
+/* ---------- HUD chrome ---------- */
+.hud-corner{position:fixed;width:26px;height:26px;z-index:20;pointer-events:none;border:0 solid rgba(110,140,160,.55)}
+.hud-corner.tl{top:16px;left:16px;border-top-width:1px;border-left-width:1px}
+.hud-corner.tr{top:16px;right:16px;border-top-width:1px;border-right-width:1px}
+.hud-corner.bl{bottom:16px;left:16px;border-bottom-width:1px;border-left-width:1px}
+.hud-corner.br{bottom:16px;right:16px;border-bottom-width:1px;border-right-width:1px}
+
+.readout{
+  position:fixed;top:22px;left:56px;z-index:20;pointer-events:none;
+  font:500 10px/1.8 var(--mono);letter-spacing:.16em;color:var(--slate);
+  text-transform:uppercase;
+}
+.readout .row-2{color:var(--ink);opacity:.85}
+.readout .z{color:var(--teal)}
+
+.hud-tag{
+  position:fixed;bottom:22px;left:56px;z-index:20;pointer-events:none;
+  font:400 9px/1.6 var(--mono);letter-spacing:.18em;color:var(--slate);
+  text-transform:uppercase;opacity:.75;
+}
+
+/* ---------- progress rail ---------- */
+.rail{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);
+  height:46vh;width:20px;z-index:25;
+  display:flex;flex-direction:column;justify-content:space-between;align-items:center;
+}
+.rail::before{
+  content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;
+  transform:translateX(-50%);background:rgba(110,140,160,.3);
+}
+.rail .marker{
+  position:absolute;left:50%;top:0;width:3px;height:24px;
+  transform:translate(-50%,0);background:var(--teal);
+  box-shadow:0 0 10px rgba(25,227,194,.8);border-radius:2px;
+  will-change:transform;pointer-events:none;
+}
+.tick{
+  position:relative;width:20px;height:18px;
+  display:grid;place-items:center;z-index:1;
+}
+.tick::before{
+  content:'';width:9px;height:2px;background:var(--slate);
+  transition:width .25s ease,background .25s ease,box-shadow .25s ease;
+}
+.tick:hover::before,.tick:focus-visible::before{width:14px;background:var(--ink)}
+.tick.on::before{width:14px;background:var(--teal);box-shadow:0 0 8px rgba(25,227,194,.9)}
+.tick::after{
+  content:attr(data-label);
+  position:absolute;right:26px;top:50%;transform:translateY(-50%);
+  font:500 9px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--slate);white-space:nowrap;opacity:0;transition:opacity .2s ease;
+  pointer-events:none;
+}
+.tick:hover::after,.tick:focus-visible::after{opacity:1}
+
+/* ---------- visually hidden ---------- */
+.vh{
+  position:absolute;width:1px;height:1px;overflow:hidden;
+  clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;
+}
+
+/* ---------- stations / scroll track ---------- */
+main{position:relative;z-index:10}
+.station{height:100vh;position:relative}
+
+.card{
+  position:fixed;left:50%;top:50%;
+  transform:translate(-50%,-46%);
+  width:min(680px,88vw);
+  padding:clamp(26px,4vw,42px) clamp(22px,4.5vw,46px);
+  text-align:center;
+  background:rgba(3,15,21,.6);
+  border:1px solid rgba(110,140,160,.16);
+  backdrop-filter:blur(7px);
+  -webkit-backdrop-filter:blur(7px);
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .7s ease,transform .7s ease,visibility 0s linear .7s;
+  z-index:10;
+}
+.station.is-active .card{
+  opacity:1;visibility:visible;pointer-events:auto;
+  transform:translate(-50%,-50%);
+  transition:opacity .7s ease .12s,transform .7s ease .12s,visibility 0s;
+}
+
+.eyebrow{
+  font:500 10px/1.4 var(--mono);letter-spacing:.26em;text-transform:uppercase;
+  color:var(--teal);margin-bottom:18px;
+}
+.eyebrow.coral{color:var(--coral)}
+h1{font-size:clamp(32px,5.6vw,58px);font-weight:700;line-height:1.06;letter-spacing:-.015em}
+h2{font-size:clamp(26px,4.6vw,46px);font-weight:700;line-height:1.1;letter-spacing:-.012em}
+.sub{
+  margin-top:18px;font-size:clamp(14px,1.8vw,17px);line-height:1.6;
+  color:var(--sub);font-weight:400;
+  max-width:52ch;margin-left:auto;margin-right:auto;
+}
+.cue{
+  margin-top:30px;font:500 10px/1 var(--mono);letter-spacing:.26em;
+  color:var(--slate);text-transform:uppercase;
+}
+.cue .arrow{display:inline-block;color:var(--teal);animation:bob 1.7s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* ---------- pillars (station 3) ---------- */
+.pillars{
+  margin-top:26px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+}
+.pill{
+  position:relative;cursor:pointer;
+  font:500 10px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--teal);background:rgba(25,227,194,.06);
+  border:1px solid rgba(25,227,194,.35);
+  padding:11px 14px;transition:background .2s ease,border-color .2s ease;
+}
+.pill:hover,.pill:focus-visible{background:rgba(25,227,194,.14);border-color:rgba(25,227,194,.7)}
+.pill.coral{color:var(--coral);background:rgba(255,106,85,.07);border-color:rgba(255,106,85,.4)}
+.pill.coral:hover,.pill.coral:focus-visible{background:rgba(255,106,85,.16);border-color:rgba(255,106,85,.8)}
+.pill .tip{
+  position:absolute;bottom:calc(100% + 12px);left:50%;
+  transform:translate(-50%,5px);
+  width:min(240px,72vw);padding:11px 13px;
+  font:400 12px/1.55 var(--grot);letter-spacing:0;text-transform:none;
+  color:var(--ink);background:#04141C;
+  border:1px solid rgba(110,140,160,.35);
+  opacity:0;pointer-events:none;
+  transition:opacity .22s ease,transform .22s ease;
+  z-index:5;
+}
+.pill:hover .tip,.pill:focus-visible .tip{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- corner mini cards (station 5) ---------- */
+.mini{
+  width:min(290px,44vw);padding:18px 20px;text-align:left;
+  left:auto;top:auto;right:auto;bottom:auto;
+  transform:translateY(14px);
+}
+.station.is-active .mini{transform:translateY(0)}
+.mini .eyebrow{margin-bottom:8px}
+.mini p:not(.eyebrow){font-size:clamp(13px,1.5vw,15px);line-height:1.5;color:var(--ink)}
+.mini.tl{left:6vw;top:15vh}
+.mini.tr{right:6vw;top:15vh;text-align:right}
+.mini.bl{left:6vw;bottom:14vh}
+.mini.br{right:6vw;bottom:14vh;text-align:right}
+.mini.br .eyebrow{color:var(--coral)}
+
+/* ---------- CTA + footer (station 6) ---------- */
+.cta{
+  display:inline-block;margin-top:28px;padding:15px 28px;
+  font:700 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;
+  color:#1B0703;background:var(--coral);text-decoration:none;
+  box-shadow:0 0 24px rgba(255,106,85,.35);
+  transition:box-shadow .25s ease,transform .25s ease;
+}
+.cta:hover,.cta:focus-visible{box-shadow:0 0 44px rgba(255,106,85,.65);transform:translateY(-2px)}
+.foot{
+  margin-top:34px;font:400 9px/1.9 var(--mono);letter-spacing:.14em;
+  color:var(--slate);text-transform:uppercase;
+}
+.foot a{color:var(--slate);text-decoration:underline;text-underline-offset:3px}
+.foot a:hover{color:var(--ink)}
+
+/* ---------- mobile ---------- */
+@media (max-width:767px){
+  .readout{left:46px;font-size:9px}
+  .hud-tag{display:none}
+  .rail{right:12px}
+  .tick::after{display:none}
+  .card{width:92vw;padding:24px 18px}
+  .mini{width:44vw;padding:12px 12px}
+  .mini.tl,.mini.bl{left:3vw}
+  .mini.tr,.mini.br{right:3vw}
+  .mini.tl,.mini.tr{top:11vh}
+  .mini.bl,.mini.br{bottom:10vh}
+  .mini p:not(.eyebrow){font-size:12px}
+  .pill{padding:10px 10px;font-size:9px}
+}
+
+/* ---------- reduced motion: static backdrop, normal flow ---------- */
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .cue{display:none}
+  .station{
+    height:auto;min-height:82vh;
+    display:flex;align-items:center;justify-content:center;
+    flex-wrap:wrap;gap:20px;padding:10vh 8vw;
+  }
+  .card,.mini{
+    position:static;opacity:1;visibility:visible;
+    transform:none;pointer-events:auto;transition:none;
+  }
+  .mini{width:min(320px,84vw);text-align:left}
+  .pill .tip{transition:none}
+}
+</style>
+</head>
+<body>
+
+<a class="skip" id="skip" href="#s6">Skip to contact</a>
+
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- HUD chrome -->
+<div class="hud-corner tl" aria-hidden="true"></div>
+<div class="hud-corner tr" aria-hidden="true"></div>
+<div class="hud-corner bl" aria-hidden="true"></div>
+<div class="hud-corner br" aria-hidden="true"></div>
+
+<div class="readout" aria-hidden="true">
+  RHRI · VALIDATION NETWORK<br>
+  <span class="row-2" id="ro-station">STATION 01 — 07</span><br>
+  <span class="z" id="ro-z">z +0.0</span>
+</div>
+
+<div class="hud-tag" aria-hidden="true">DEEPFIELD · CONCEPT DRAFT · 2026</div>
+
+<nav class="rail" aria-label="Stations">
+  <div class="marker" id="rail-marker" aria-hidden="true"></div>
+  <a class="tick" href="#s0" data-label="Launch"><span class="vh">Station 1 — Launch</span></a>
+  <a class="tick" href="#s1" data-label="The problem"><span class="vh">Station 2 — The problem</span></a>
+  <a class="tick" href="#s2" data-label="The answer"><span class="vh">Station 3 — The answer</span></a>
+  <a class="tick" href="#s3" data-label="The standard"><span class="vh">Station 4 — The standard</span></a>
+  <a class="tick" href="#s4" data-label="The network"><span class="vh">Station 5 — The network</span></a>
+  <a class="tick" href="#s5" data-label="Who it's for"><span class="vh">Station 6 — Who it's for</span></a>
+  <a class="tick" href="#s6" data-label="Get involved"><span class="vh">Station 7 — Get involved</span></a>
+</nav>
+
+<main aria-label="RHRI Deepfield">
+
+  <section class="station" id="s0">
+    <div class="card">
+      <p class="eyebrow">Reproductive Health Research Institute</p>
+      <h1>Rigorous Science.<br>Real-World Impact.</h1>
+      <p class="sub">An independent network that validates reproductive-health technology in real clinics — before it reaches patients.</p>
+      <p class="cue" aria-hidden="true">Scroll to enter <span class="arrow">↓</span></p>
+    </div>
+  </section>
+
+  <section class="station" id="s1">
+    <div class="card">
+      <p class="eyebrow">01 — The Problem</p>
+      <h2>The path from lab to clinic is broken.</h2>
+      <p class="sub">Marketing outruns evidence. Clinics carry the risk.</p>
+    </div>
+  </section>
+
+  <section class="station" id="s2">
+    <div class="card">
+      <p class="eyebrow">02 — The Answer</p>
+      <h2>So we built the missing layer: independent validation infrastructure.</h2>
+    </div>
+  </section>
+
+  <section class="station" id="s3">
+    <div class="card">
+      <p class="eyebrow">03 — The Standard</p>
+      <h2>Every technology is tested on four pillars.</h2>
+      <div class="pillars" role="group" aria-label="The four pillars">
+        <button class="pill" type="button" data-pillar="0" aria-describedby="tip0">Replicability
+          <span class="tip" role="tooltip" id="tip0">Do results hold across operators, labs, geographies?</span>
+        </button>
+        <button class="pill" type="button" data-pillar="1" aria-describedby="tip1">Scalability
+          <span class="tip" role="tooltip" id="tip1">Does it work at clinic volume, across real skill levels?</span>
+        </button>
+        <button class="pill" type="button" data-pillar="2" aria-describedby="tip2">Sustainability
+          <span class="tip" role="tooltip" id="tip2">Do the economics hold as volume grows?</span>
+        </button>
+        <button class="pill coral" type="button" data-pillar="3" aria-describedby="tip3">Patient Value
+          <span class="tip" role="tooltip" id="tip3">Better outcomes, lower cost, wider access. The only measure that counts.</span>
+        </button>
+      </div>
+      <p class="sub">Most evaluations test the first. We test all four.</p>
+    </div>
+  </section>
+
+  <section class="station" id="s4">
+    <div class="card">
+      <p class="eyebrow">04 — The Network</p>
+      <h2>Tested across clinics, geographies, and skill levels — under real conditions.</h2>
+    </div>
+  </section>
+
+  <section class="station" id="s5">
+    <h2 class="vh">Who it's for</h2>
+    <div class="card mini tl">
+      <p class="eyebrow">Innovators</p>
+      <p>Validation clinics trust.</p>
+    </div>
+    <div class="card mini tr">
+      <p class="eyebrow">Clinics</p>
+      <p>Proven tech, less risk.</p>
+    </div>
+    <div class="card mini bl">
+      <p class="eyebrow">Funders</p>
+      <p>Signal, separated from noise.</p>
+    </div>
+    <div class="card mini br">
+      <p class="eyebrow">Patients</p>
+      <p>The reason the standard exists.</p>
+    </div>
+  </section>
+
+  <section class="station" id="s6">
+    <div class="card">
+      <p class="eyebrow coral">Arrival</p>
+      <h2>This is the foundation. Now we build.</h2>
+      <a class="cta" id="cta" href="mailto:dm@rhri.bio">Get involved → dm@rhri.bio</a>
+      <p class="foot">
+        Daniel Madero · Cynthia Hudson · Felicitas Azpiroz — © 2026 RHRI<br>
+        <a href="../index.html">← all concepts</a>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<noscript>
+<style>
+  .station{height:auto;min-height:80vh;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:20px;padding:10vh 8vw}
+  .card,.mini{position:static;opacity:1;visibility:visible;transform:none;pointer-events:auto;transition:none}
+  .cue{display:none}
+</style>
+</noscript>
+
+<script>
+(function(){
+'use strict';
+
+var canvas = document.getElementById('field');
+var ctx = canvas.getContext('2d');
+if(!ctx) return;
+
+var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var MOBILE  = window.matchMedia('(max-width: 767px)').matches;
+
+/* ---------------- constants ---------------- */
+var STATIONS = 7;
+var WPZ = [-150, 450, 1050, 1700, 2350, 2950, 3560]; /* camera waypoints (z) */
+var PILLAR_Z = WPZ[3] + 180;
+var BEACON_Z = 3800;
+var FOG  = 1500;   /* depth at which everything fades out */
+var NEAR = 10;     /* projection near plane */
+var NODE_N  = MOBILE ? 120 : 350;
+var PULSE_N = MOBILE ? 5   : 14;
+
+/* ---------------- viewport ---------------- */
+var W = 0, H = 0, CX = 0, CY = 0, FOCAL = 600, DPR = 1;
+function resize(){
+  DPR = Math.min(window.devicePixelRatio || 1, MOBILE ? 1.5 : 2);
+  W = window.innerWidth; H = window.innerHeight;
+  canvas.width  = Math.round(W * DPR);
+  canvas.height = Math.round(H * DPR);
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  CX = W / 2; CY = H / 2;
+  FOCAL = Math.max(W, H) * 0.62;
+  railH = rail ? rail.offsetHeight : 0;
+  if(REDUCED) renderStatic();
+}
+
+/* ---------------- flight path ---------------- */
+function pathX(z){ return Math.sin(z * 0.0016) * 70; }
+function pathY(z){ return Math.cos(z * 0.0011) * 40; }
+
+/* ---------------- field generation ----------------
+   Zones keyed to the story: sparse/broken → knitting →
+   pillar plaza → dense core → calm → arrival corridor. */
+var ZONES = [
+  { z0:-300, z1: 450, w:.14, rMin: 90, rMax:560, link:150, kind:'calm'   },
+  { z0: 450, z1:1100, w:.10, rMin:130, rMax:640, link: 95, kind:'sparse' },
+  { z0:1100, z1:1750, w:.16, rMin: 90, rMax:520, link:175, kind:'knit'   },
+  { z0:1750, z1:2150, w:.08, rMin:120, rMax:480, link:150, kind:'calm'   },
+  { z0:2150, z1:2900, w:.26, rMin: 70, rMax:380, link:170, kind:'dense'  },
+  { z0:2900, z1:3500, w:.14, rMin: 90, rMax:520, link:155, kind:'calm'   },
+  { z0:3500, z1:4400, w:.12, rMin:100, rMax:560, link:150, kind:'arrive' }
+];
+
+var nodes = [];
+var edges = [];
+
+function buildField(){
+  var i, j, z, zn;
+  for(i = 0; i < ZONES.length; i++){
+    zn = ZONES[i];
+    var count = Math.round(NODE_N * zn.w);
+    for(j = 0; j < count; j++){
+      z = zn.z0 + Math.random() * (zn.z1 - zn.z0);
+      var ang = Math.random() * Math.PI * 2;
+      /* power curve keeps density near the corridor, clear of the path */
+      var r = zn.rMin + Math.pow(Math.random(), 0.72) * (zn.rMax - zn.rMin);
+      nodes.push({
+        x: pathX(z) + Math.cos(ang) * r,
+        y: pathY(z) + Math.sin(ang) * r * 0.72,
+        z: z,
+        size: 0.8 + Math.random() * 1.3,
+        link: zn.link,
+        kind: zn.kind,
+        flick: (zn.kind === 'sparse' && Math.random() < 0.18),
+        ph: Math.random() * 6.283
+      });
+    }
+  }
+
+  /* edges: z-sorted sweep, distance threshold, max degree 3 */
+  nodes.sort(function(a, b){ return a.z - b.z; });
+  var deg = new Uint8Array(nodes.length);
+  var MAXLINK = 185;
+  for(i = 0; i < nodes.length; i++){
+    if(deg[i] >= 3) continue;
+    var a = nodes[i];
+    for(j = i + 1; j < nodes.length; j++){
+      if(deg[i] >= 3) break;
+      var b = nodes[j];
+      if(b.z - a.z > MAXLINK) break;
+      if(deg[j] >= 3) continue;
+      var thr = Math.min(a.link, b.link);
+      var dx = a.x - b.x, dy = a.y - b.y, dz = (a.z - b.z) * 1.05;
+      if(dx*dx + dy*dy + dz*dz < thr*thr){
+        edges.push({
+          a: i, b: j,
+          zmid: (a.z + b.z) / 2,
+          broken: (a.kind === 'sparse' || b.kind === 'sparse'),
+          knit:   (a.kind === 'knit'   || b.kind === 'knit')
+        });
+        deg[i]++; deg[j]++;
+      }
+    }
+  }
+
+  /* pillar nodes — labels are instrument chrome, mirrored by real HUD buttons */
+  var PILLARS = [
+    { label:'REPLICABILITY',  dx:-180, dy:-115, dz:  0, coral:false },
+    { label:'SCALABILITY',    dx: 180, dy:-115, dz: 45, coral:false },
+    { label:'SUSTAINABILITY', dx:-180, dy: 125, dz: 90, coral:false },
+    { label:'PATIENT VALUE',  dx: 180, dy: 125, dz:135, coral:true  }
+  ];
+  for(i = 0; i < 4; i++){
+    var p = PILLARS[i], pz = PILLAR_Z + p.dz;
+    nodes.push({
+      x: pathX(pz) + p.dx, y: pathY(pz) + p.dy, z: pz,
+      size: 2.6, kind: 'pillar', label: p.label, coral: p.coral,
+      pi: i, ph: i * 1.4
+    });
+  }
+  /* beacon — the single coral arrival node, dead ahead on the path */
+  nodes.push({
+    x: pathX(BEACON_Z), y: pathY(BEACON_Z), z: BEACON_Z,
+    size: 4, kind: 'beacon', ph: 0
+  });
+}
+
+/* ---------------- glow sprites (pre-rendered, drawImage for perf) ------- */
+function makeSprite(rgb, whiteCore){
+  var c = document.createElement('canvas');
+  c.width = c.height = 96;
+  var g = c.getContext('2d');
+  var grad = g.createRadialGradient(48, 48, 0, 48, 48, 48);
+  grad.addColorStop(0,    whiteCore ? 'rgba(235,255,250,0.95)' : 'rgba(' + rgb + ',0.9)');
+  grad.addColorStop(0.2,  'rgba(' + rgb + ',0.85)');
+  grad.addColorStop(0.5,  'rgba(' + rgb + ',0.2)');
+  grad.addColorStop(1,    'rgba(' + rgb + ',0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 96, 96);
+  return c;
+}
+var sprTeal  = makeSprite('25,227,194', true);
+var sprDim   = makeSprite('14,110,108', false);
+var sprCoral = makeSprite('255,106,85', true);
+var sprRed   = makeSprite('255,82,70',  false);
+
+/* ---------------- pulses ---------------- */
+var pulses = [];
+function initPulses(){
+  for(var i = 0; i < PULSE_N; i++) pulses.push({ e: -1, t: 0, sp: 0.4 });
+}
+function respawnPulse(p){
+  if(!edges.length){ p.e = -1; return; }
+  for(var tries = 0; tries < 8; tries++){
+    var ei = (Math.random() * edges.length) | 0;
+    var zm = edges[ei].zmid;
+    if(zm > cam.z + 60 && zm < cam.z + FOG * 0.75){
+      p.e = ei;
+      p.t = Math.random() * 0.3;
+      p.sp = 0.25 + Math.random() * 0.5;
+      return;
+    }
+  }
+  p.e = -1;
+}
+
+/* ---------------- camera + scroll ---------------- */
+var cam = { x: 0, y: 0, z: WPZ[0] };
+var scrollP = 0;
+var mx = 0, my = 0; /* mouse parallax, normalized */
+
+function onScroll(){
+  var max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  scrollP = Math.min(1, Math.max(0, (window.scrollY || window.pageYOffset || 0) / max));
+}
+function smooth(t){ return t * t * (3 - 2 * t); }
+function targetZ(p){
+  var seg = Math.min(5.9999, Math.max(0, p * (STATIONS - 1)));
+  var i = Math.floor(seg);
+  return WPZ[i] + (WPZ[i + 1] - WPZ[i]) * smooth(seg - i);
+}
+
+/* ---------------- HUD wiring ---------------- */
+var rail   = document.querySelector('.rail');
+var railH  = 0;
+var marker = document.getElementById('rail-marker');
+var roSt   = document.getElementById('ro-station');
+var roZ    = document.getElementById('ro-z');
+var ticks    = Array.prototype.slice.call(document.querySelectorAll('.tick'));
+var sections = Array.prototype.slice.call(document.querySelectorAll('.station'));
+
+var curActive = -2;
+function setActive(idx){
+  if(idx === curActive) return;
+  for(var i = 0; i < sections.length; i++){
+    sections[i].classList.toggle('is-active', i === idx);
+    ticks[i].classList.toggle('on', i === idx);
+    if(i === idx) ticks[i].setAttribute('aria-current', 'location');
+    else ticks[i].removeAttribute('aria-current');
+  }
+  if(idx >= 0) roSt.textContent = 'STATION 0' + (idx + 1) + ' — 0' + STATIONS;
+  curActive = idx;
+}
+function updateHUD(){
+  var seg = Math.min(6, Math.max(0, scrollP * (STATIONS - 1)));
+  var nearest = Math.round(seg);
+  setActive(Math.abs(seg - nearest) < 0.46 ? nearest : -1);
+  /* depth readout: pure scroll/camera math, instrument chrome only */
+  var zv = cam.z / 10;
+  roZ.textContent = 'z ' + (zv < 0 ? '−' : '+') + Math.abs(zv).toFixed(1);
+  if(railH > 0){
+    marker.style.transform = 'translate(-50%,' + (scrollP * (railH - 24)).toFixed(1) + 'px)';
+  }
+}
+
+/* pillar buttons → highlight matching field node */
+var hoverPillar = -1;
+var pillBtns = Array.prototype.slice.call(document.querySelectorAll('.pill'));
+pillBtns.forEach(function(btn){
+  var idx = parseInt(btn.getAttribute('data-pillar'), 10);
+  function on(){  hoverPillar = idx; }
+  function off(){ if(hoverPillar === idx) hoverPillar = -1; }
+  btn.addEventListener('mouseenter', on);
+  btn.addEventListener('mouseleave', off);
+  btn.addEventListener('focus', on);
+  btn.addEventListener('blur', off);
+});
+
+/* skip link → fly to arrival, then focus the CTA */
+document.getElementById('skip').addEventListener('click', function(e){
+  e.preventDefault();
+  var s6 = document.getElementById('s6');
+  window.scrollTo({ top: s6.offsetTop, behavior: REDUCED ? 'auto' : 'smooth' });
+  setTimeout(function(){
+    document.getElementById('cta').focus({ preventScroll: true });
+  }, REDUCED ? 60 : 950);
+});
+
+/* ---------------- projection ---------------- */
+var P = { x: 0, y: 0, s: 0, dz: 0 };
+function project(x, y, z){
+  var dz = z - cam.z;
+  if(dz < NEAR) return false;
+  var s = FOCAL / dz;
+  P.x = CX + (x - cam.x) * s;
+  P.y = CY + (y - cam.y) * s;
+  P.s = s; P.dz = dz;
+  return true;
+}
+function fogA(dz){
+  var far  = 1 - dz / FOG;            if(far  <= 0) return 0;
+  var near = (dz - NEAR) / 70;        if(near >= 1) near = 1;
+  return far * near;
+}
+function onScreen(x, y){
+  return x > -220 && x < W + 220 && y > -220 && y < H + 220;
+}
+
+/* ---------------- render ---------------- */
+var TEAL = '#19E3C2', CORAL = '#FF6A55';
+
+function drawEdges(now, staticView){
+  var i, e, a, b, ax, ay, bx, by, fa, fb, alpha, k;
+  /* pass 0: solid edges · pass 1: broken (dashed) edges */
+  for(var pass = 0; pass < 2; pass++){
+    if(pass === 1) ctx.setLineDash([5, 9]);
+    ctx.strokeStyle = TEAL;
+    for(i = 0; i < edges.length; i++){
+      e = edges[i];
+      if(e.broken !== (pass === 1)) continue;
+      a = nodes[e.a]; b = nodes[e.b];
+      if(!project(a.x, a.y, a.z)) continue;
+      ax = P.x; ay = P.y; fa = fogA(P.dz);
+      if(!project(b.x, b.y, b.z)) continue;
+      bx = P.x; by = P.y; fb = fogA(P.dz);
+      alpha = Math.min(fa, fb) * 0.5;
+      if(e.knit && !staticView){
+        /* knit zone: edges brighten as the camera approaches */
+        k = (cam.z - (e.zmid - 700)) / 500;
+        if(k < 0) k = 0; if(k > 1) k = 1;
+        alpha *= 0.12 + 0.88 * smooth(k);
+      }
+      if(e.broken) alpha *= 0.55;
+      if(alpha < 0.02) continue;
+      if(!onScreen(ax, ay) && !onScreen(bx, by)) continue;
+      ctx.globalAlpha = alpha;
+      ctx.lineWidth = Math.min(1.8, Math.max(0.4, FOCAL / Math.max(e.zmid - cam.z, NEAR) * 0.9));
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(bx, by);
+      ctx.stroke();
+    }
+    if(pass === 1) ctx.setLineDash([]);
+  }
+}
+
+function drawNodes(now){
+  ctx.textAlign = 'center';
+  for(var i = 0; i < nodes.length; i++){
+    var n = nodes[i];
+    if(!project(n.x, n.y, n.z)) continue;
+    var a = fogA(P.dz);
+    if(a <= 0.02 || !onScreen(P.x, P.y)) continue;
+    var d = Math.min(220, n.size * P.s * 26);
+
+    if(n.kind === 'beacon'){
+      var th = 1 + 0.16 * Math.sin(now * 2.4);
+      ctx.globalAlpha = a;
+      ctx.drawImage(sprCoral, P.x - d * th / 2, P.y - d * th / 2, d * th, d * th);
+      /* expanding marker ring */
+      var ring = ((now * 0.45) % 1);
+      ctx.globalAlpha = a * (1 - ring) * 0.55;
+      ctx.strokeStyle = CORAL;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.arc(P.x, P.y, Math.max(1, P.s * (40 + ring * 120)), 0, 6.283);
+      ctx.stroke();
+
+    } else if(n.kind === 'pillar'){
+      var hot = (hoverPillar === n.pi);
+      var pd = d * (hot ? 1.45 : 1);
+      ctx.globalAlpha = Math.min(1, a * (hot ? 1.4 : 1));
+      ctx.drawImage(n.coral ? sprCoral : sprTeal, P.x - pd / 2, P.y - pd / 2, pd, pd);
+      var fs = Math.min(20, P.s * 10);
+      if(fs >= 7){
+        ctx.font = '500 ' + fs.toFixed(1) + 'px "JetBrains Mono", monospace';
+        ctx.fillStyle = n.coral ? '#FF8A75' : '#9FF2E4';
+        ctx.globalAlpha = a * (hot ? 1 : 0.85);
+        ctx.fillText(n.label, P.x, P.y - pd * 0.5 - 8);
+      }
+
+    } else if(n.flick){
+      /* unreliable signal: red, stuttering */
+      var f = 0.35 + 0.65 * Math.abs(Math.sin(now * 6 + n.ph));
+      if(Math.sin(now * 2.1 + n.ph * 3) > 0.94) f *= 0.15;
+      ctx.globalAlpha = a * f;
+      ctx.drawImage(sprRed, P.x - d / 2, P.y - d / 2, d, d);
+
+    } else {
+      /* depth crossfade: far nodes dim toward deep teal */
+      var k = P.dz / 1200; if(k > 1) k = 1;
+      if(k < 0.98){
+        ctx.globalAlpha = a * (1 - k);
+        ctx.drawImage(sprTeal, P.x - d / 2, P.y - d / 2, d, d);
+      }
+      if(k > 0.02){
+        ctx.globalAlpha = a * k;
+        ctx.drawImage(sprDim, P.x - d / 2, P.y - d / 2, d, d);
+      }
+    }
+  }
+}
+
+function drawPulses(now, dt){
+  for(var i = 0; i < pulses.length; i++){
+    var p = pulses[i];
+    if(p.e < 0 || p.t > 1){ respawnPulse(p); continue; }
+    p.t += p.sp * dt;
+    var e = edges[p.e];
+    var a = nodes[e.a], b = nodes[e.b];
+    var x = a.x + (b.x - a.x) * p.t;
+    var y = a.y + (b.y - a.y) * p.t;
+    var z = a.z + (b.z - a.z) * p.t;
+    if(z - cam.z < NEAR){ respawnPulse(p); continue; }
+    if(!project(x, y, z)) continue;
+    var al = fogA(P.dz);
+    if(al <= 0.03 || !onScreen(P.x, P.y)) continue;
+    var d = Math.min(60, 0.55 * P.s * 26);
+    ctx.globalAlpha = al;
+    ctx.drawImage(e.zmid > 3350 ? sprCoral : sprTeal, P.x - d / 2, P.y - d / 2, d, d);
+  }
+}
+
+function renderFrame(now, dt, staticView){
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#02090E';
+  ctx.fillRect(0, 0, W, H);
+  ctx.globalCompositeOperation = 'lighter'; /* additive glow */
+  drawEdges(now, staticView);
+  if(!staticView) drawPulses(now, dt);
+  drawNodes(now);
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.globalAlpha = 1;
+}
+
+/* ---------------- reduced motion: one wide still ---------------- */
+function renderStatic(){
+  cam.x = 0; cam.y = -40; cam.z = -760;
+  renderFrame(0.8, 0, true);
+}
+
+/* ---------------- main loop ---------------- */
+var rafId = 0, last = 0;
+
+function tick(ms){
+  rafId = requestAnimationFrame(tick);
+  var now = ms / 1000;
+  var dt = Math.min(0.05, Math.max(0.001, now - last));
+  last = now;
+
+  /* camera chase: waypoint target + path sway + mouse lean */
+  var k1 = 1 - Math.pow(0.928, dt * 60);
+  var k2 = 1 - Math.pow(0.94,  dt * 60);
+  cam.z += (targetZ(scrollP) - cam.z) * k1;
+  var lean = (MOBILE ? 0 : 1);
+  cam.x += (pathX(cam.z) + mx * 26 * lean - cam.x) * k2;
+  cam.y += (pathY(cam.z) * 0.6 + my * 18 * lean - cam.y) * k2;
+
+  renderFrame(now, dt, false);
+  updateHUD();
+}
+
+function start(){
+  if(!rafId){
+    last = performance.now() / 1000;
+    rafId = requestAnimationFrame(tick);
+  }
+}
+function stop(){
+  if(rafId){ cancelAnimationFrame(rafId); rafId = 0; }
+}
+
+/* ---------------- boot ---------------- */
+buildField();
+initPulses();
+resize();
+onScroll();
+cam.z = targetZ(scrollP); /* no swoop when reloading mid-page */
+cam.x = pathX(cam.z);
+cam.y = pathY(cam.z) * 0.6;
+
+window.addEventListener('resize', resize);
+
+if(REDUCED){
+  roZ.textContent = 'z — static view';
+  setActive(0);
+  renderStatic();
+} else {
+  window.addEventListener('scroll', onScroll, { passive: true });
+  if(!MOBILE){
+    window.addEventListener('mousemove', function(e){
+      mx = (e.clientX / W) * 2 - 1;
+      my = (e.clientY / H) * 2 - 1;
+    }, { passive: true });
+  }
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden) stop(); else start();
+  });
+  updateHUD();
+  start();
+}
+
+})();
+</script>
+</body>
+</html>
